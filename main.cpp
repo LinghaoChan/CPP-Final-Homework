@@ -64,10 +64,12 @@ namespace System{
 	void Create_Student(void); 
 	void Create_Teacher_Fam(void); 
 	void Check_MONTH(void);
-	void Delete_Account(void);
+	void Delete_Account_menu(void);
 	void Delete_Teacher();
 	void Delete_Student();
 	void Delete_Teacher_Fam();
+	string CharToStr(char * contentChar);
+	void DelLineData(string fileName, int lineNum);
 	string get_password(void);
 
 }
@@ -615,9 +617,58 @@ void System :: Delete_Teacher(){
 }
 
 void System :: Delete_Student(){
-	
-	
-	
+	string Filename = "Student_Account_Message.txt";
+	while(true){
+		system("cls");
+		fflush(stdin);
+		string s_name; 
+		cout<<"请输入您的名字:"<<endl;
+		cin>>s_name;
+		string s_id;
+		cout<<"请输入您的学号："<<endl;
+		cin>>s_id;		
+		
+		ifstream fin(Filename, std::ios::in);
+		char line[1024]={0};
+		string f_name = "";
+		string f_id = "";
+		string f_sex = "";
+		string f_college = "";
+		string f_password = "";
+		bool In_Message=false;
+		int number = 0;
+		
+		while(fin.getline(line, sizeof(line))){
+			number++;
+			stringstream word(line);
+			word >> f_name;
+			word >> f_sex;
+			word >> f_id;
+			word >> f_college;
+			word >> f_password;
+//			cout<< f_name << " " << f_id <<endl;
+//			cout<< s_name << " " << s_id <<endl;
+			while(s_name == f_name && s_id == f_id){
+				cout<<"请输入您的密码:"<<endl;
+				string tmp_password = get_password();
+				if(f_password == tmp_password){
+					DelLineData(Filename, number);
+					break;
+				}
+				In_Message = true;
+			}
+			if(In_Message == true){
+				break;
+			}
+		}
+		fin.clear();
+		fin.close();
+		if(In_Message == true){
+			cout<<"\07用户创建成功！"<<endl; 
+		    Sleep(500);
+			break;
+		}
+	}	
 }
 
 void System :: Delete_Teacher_Fam(){
@@ -626,6 +677,43 @@ void System :: Delete_Teacher_Fam(){
 	
 }
 
+string System :: CharToStr(char * contentChar)
+{
+	string tempStr;
+	for (int i=0;contentChar[i]!='\0';i++)
+	{
+		tempStr+=contentChar[i];
+	}
+	return tempStr;
+}
+void System :: DelLineData(string fileName, int lineNum)
+{
+	ifstream in;
+	in.open(fileName);
+	
+	string strFileData = "";
+	int line = 1;
+	char lineData[1024] = {0};
+	while(in.getline(lineData, sizeof(lineData)))
+	{
+		if (line == lineNum)
+		{
+			strFileData += "";
+		}
+		else
+		{
+			strFileData += CharToStr(lineData);
+			strFileData += "\n";
+		}
+		line++;
+	}
+	in.close();
+	ofstream out;
+	out.open(fileName);
+	out.flush();
+	out<<strFileData;
+	out.close();
+}
 
 int main(){
 	System::System_open();
