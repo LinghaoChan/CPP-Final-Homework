@@ -74,15 +74,15 @@ string get_password(){
 }
 
 int main(){
-	string Filename = "Student_Account_Message.txt";
+	string Filename = "Teacher_Account_Message.txt";
 	while(true){
 		system("cls");
 		fflush(stdin);
 		string s_name; 
 		cout<<"ÇëÊäÈëÄúµÄÃû×Ö:"<<endl;
-		cin>>s_name;
+		cin>>s_name; 
 		string s_id;
-		cout<<"ÇëÊäÈëÄúµÄÑ§ºÅ£º"<<endl;
+		cout<<"ÇëÊäÈëÄúµÄ¼ÒÊô±àºÅ£º"<<endl;
 		cin>>s_id;		
 		
 		ifstream fin(Filename, std::ios::in);
@@ -99,8 +99,8 @@ int main(){
 			number++;
 			stringstream word(line);
 			word >> f_name;
-			word >> f_sex;
 			word >> f_id;
+			word >> f_sex;
 			word >> f_college;
 			word >> f_password;
 //			cout<< f_name << " " << f_id <<endl;
