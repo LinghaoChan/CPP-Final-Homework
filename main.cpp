@@ -63,6 +63,7 @@ public:
 	int Get_count(void);
 	int Get_number_of_passengers(void);
 	void Show_Status(void);
+	bool Get_Status(void);
 };
 
 Bus :: Bus(int un_permit){
@@ -125,6 +126,14 @@ void Bus :: Show_Status(){
 	cout<<"| |   车型："<<brand<<"\t\t车牌："<<id<<"\t\t车上人数："<<number_of_passengers<<"\t\t状态："<<status<<"      | |\n";
 	cout<<"| *                                                                                             * |\n";
 	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  |\n\n\n";
+}
+
+bool Bus :: Get_Status(){
+	if(number_of_passengers<size){
+		return true; 
+	}else{
+		return false;
+	}
 }
 
 class System{
@@ -993,14 +1002,23 @@ void System :: Get_On_Bus(){
 	}	
 }
 
-void System :: Teacher_Get_On_Bus(){
+void System :: Teacher_Get_On_Bus(){ //老师选乘车点，车辆的位置，系统时间的获取 
 	Bus bus1(51);
 	int bus1_number = bus1.Get_count();
 	Bus bus2(bus1_number);
 	cout<<" *==========================================当前车辆信息==========================================*\n\n\n";
 	bus1.Show_Status();
 	bus2.Show_Status();
-	Sleep(5000);
+	bool status1 = bus1.Show_Status(), status2 = bus2.Show_Status();
+	if(status1&&status2){
+		
+	} else if(stauts1 && (!stauts1)){
+		
+	} else if((!status1) && status2){
+		
+	} else{
+		
+	}
 }
 
 
