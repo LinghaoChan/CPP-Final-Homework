@@ -9,120 +9,94 @@
 #include <windows.h>
 using namespace std;
 
-string CharToStr(char * contentChar)
-{
-	string tempStr;
-	for (int i=0;contentChar[i]!='\0';i++)
-	{
-		tempStr+=contentChar[i];
-	}
-	return tempStr;
-}
-void DelLineData(string fileName, int lineNum)
-{
-	ifstream in;
-	in.open(fileName);
-	
-	string strFileData = "";
-	int line = 1;
-	char lineData[1024] = {0};
-	while(in.getline(lineData, sizeof(lineData)))
-	{
-		if (line == lineNum)
-		{
-			strFileData += "";
-		}
-		else
-		{
-			strFileData += CharToStr(lineData);
-			strFileData += "\n";
-		}
-		line++;
-	}
-	in.close();
- 
-	//写入文件
-	ofstream out;
-	out.open(fileName);
-	out.flush();
-	out<<strFileData;
-	out.close();
-}
+class Bus{
+private:
+	int number_of_passengers;
+	int size;
+	int count;
+	string id;
+	string brand;
+	string driver; 
+public:
+	Bus(int un_permit);
+	string Get_Bus_Id(void);
+	int Get_count(void);
+	int Get_number_of_passengers(void);
+	void Show_Status(void);
+};
 
-string get_password(){
-	int count = 0;
-	char str[25];
-	char c;
-	while((c = getch()) != 13){
-		if(c==8 && count>0){
-			cout<<"\b \b";
-			count--;
-			continue;
-		} else if(c != 8){
-			putchar('*');	
-			str[count] = c;
-			count++;			
-		}
-		if (count >= 20){
-			cout << endl << "密码不超过20位,重新输入" <<endl;
+Bus :: Bus(int un_permit){
+	string Filename = "Bus_Message.txt";
+	ifstream fin(Filename, std::ios::in);
+	char line[1024]={0};
+	string f_id = "";
+	string f_name = "";
+	string f_brand = "";
+	string f_size = "";
+	srand((unsigned)time(NULL));
+	int choice, number=0;  
+	while((choice = (rand()%50+1))==un_permit){	
+		//busy waiting
+	} 
+	while(fin.getline(line, sizeof(line))){
+		number++;
+		stringstream word(line);
+		if(choice == number){
+			word >> f_id;
+			word >> f_name;
+			word >> f_brand;
+			word >> f_size;	
+			id = f_id;
+			driver = f_name;
+			brand = f_brand;
+			size = atoi(f_size.c_str());
+			count = number;
+			number_of_passengers = rand()%size+1;
+			cout<<id<<driver<<brand<<size<<endl;
 			break;
 		}
 	}
-	str[count] = '\0';
-	string s = str; 
-	return s;
+	fin.clear();
+	fin.close();
+}
+
+string Bus :: Get_Bus_Id(){
+	return id;
+}
+
+void Bus :: Show_Status(){
+	string status;
+	if(number_of_passengers<size){
+		status = "未满"; 
+	}
+	else{
+		status = "已满";
+	}
+	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  - * |\n";
+	cout<<"| *                                                                                             * |\n";
+	cout<<"| |   车型："<<brand<<"\t\t车牌："<<id<<"\t\t车上人数："<<number_of_passengers<<"\t\t状态："<<status<<"      | |\n";
+	cout<<"| *                                                                                             * |\n";
+	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  |\n\n\n";
 }
 
 int main(){
-	string Filename = "Teacher_Account_Message.txt";
-	while(true){
-		system("cls");
-		fflush(stdin);
-		string s_name; 
-		cout<<"请输入您的名字:"<<endl;
-		cin>>s_name; 
-		string s_id;
-		cout<<"请输入您的家属编号："<<endl;
-		cin>>s_id;		
-		
-		ifstream fin(Filename, std::ios::in);
-		char line[1024]={0};
-		string f_name = "";
-		string f_id = "";
-		string f_sex = "";
-		string f_college = "";
-		string f_password = "";
-		bool In_Message=false;
-		int number = 0;
-		
-		while(fin.getline(line, sizeof(line))){
-			number++;
-			stringstream word(line);
-			word >> f_name;
-			word >> f_id;
-			word >> f_sex;
-			word >> f_college;
-			word >> f_password;
-//			cout<< f_name << " " << f_id <<endl;
-//			cout<< s_name << " " << s_id <<endl;
-			while(s_name == f_name && s_id == f_id){
-				cout<<"请输入您的密码:"<<endl;
-				string tmp_password = get_password();
-				if(f_password == tmp_password){
-					DelLineData(Filename, number);
-					break;
-				}
-				In_Message = true;
-			}
-			if(In_Message == true){
-				break;
-			}
-		}
-		fin.clear();
-		fin.close();
-		if(In_Message == true){
-			break;
-		}
-	}
+	Bus bus1(2);
+	cout<<bus1.Get_Bus_Id()<<endl;
+	bus1.Show_Status();
 	return 0;
 }
+/* 
+cout<<" *===================================当前车辆信息====================================*\n\n\n";
+cout<<" *===================================================================================*\n";
+cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  - * |\n";
+cout<<"| *                                                                                 * |\n";
+cout<<"| |   车型：           车牌：             车上人数：             状态：             | |\n";
+cout<<"| *                                                                                 * |\n";
+cout<<"| |          司机                                                                   | |\n";
+cout<<"| *                                                                                 * |\n";
+cout<<"| |          车牌            | |\n";
+cout<<"| *                                     * |\n";
+cout<<"| |          [4]   退出系统             | |\n";
+cout<<"| *                                     * |\n";
+cout<<"|  * - * - * - * - * - * - * - * - * - *  |\n\n\n";
+*/

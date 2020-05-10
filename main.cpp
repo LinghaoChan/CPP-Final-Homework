@@ -7,6 +7,7 @@
 #include <conio.h>
 #include <sstream>
 #include <fstream>
+#include <time.h>
 
 using namespace std;
 class People{
@@ -49,13 +50,86 @@ public:
 };
 
 class Bus{
-	
-	
+private:
+	int number_of_passengers;
+	int size;
+	int count;
+	string id;
+	string brand;
+	string driver; 
+public:
+	Bus(int un_permit);
+	string Get_Bus_Id(void);
+	int Get_count(void);
+	int Get_number_of_passengers(void);
+	void Show_Status(void);
 };
 
+Bus :: Bus(int un_permit){
+	string Filename = "Bus_Message.txt";
+	ifstream fin(Filename, std::ios::in);
+	char line[1024]={0};
+	string f_id = "";
+	string f_name = "";
+	string f_brand = "";
+	string f_size = "";
+	srand((unsigned)time(NULL));
+	int choice, number=0;  
+	while((choice = (rand()%50+1))==un_permit){	
+		//busy waiting
+	} 
+	while(fin.getline(line, sizeof(line))){
+		number++;
+		stringstream word(line);
+		if(choice == number){
+			word >> f_id;
+			word >> f_name;
+			word >> f_brand;
+			word >> f_size;	
+			id = f_id;
+			driver = f_name;
+			brand = f_brand;
+			size = atoi(f_size.c_str());
+			count = number;
+			number_of_passengers = rand()%size+1;
+//			cout<<id<<driver<<brand<<size<<endl;
+			break;
+		}
+	}
+	fin.clear();
+	fin.close();
+}
 
-namespace System{
+string Bus :: Get_Bus_Id(){
+	return id;
+}
+
+int Bus :: Get_count(){
+	return count;
+}
+
+int Bus :: Get_number_of_passengers(){
+	return number_of_passengers;
+}
+
+void Bus :: Show_Status(){
+	string status;
+	if(number_of_passengers<size){
+		status = "未满"; 
+	}
+	else{
+		status = "已满";
+	}
+	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  - * |\n";
+	cout<<"| *                                                                                             * |\n";
+	cout<<"| |   车型："<<brand<<"\t\t车牌："<<id<<"\t\t车上人数："<<number_of_passengers<<"\t\t状态："<<status<<"      | |\n";
+	cout<<"| *                                                                                             * |\n";
+	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  |\n\n\n";
+}
+
+class System{
 	int MONTH = 5; 
+public:
 	void System_open(void);
 	void System_choice(void);
 	void System_Initialize_User_Message(void);
@@ -65,14 +139,21 @@ namespace System{
 	void Create_Teacher_Fam(void); 
 	void Check_MONTH(void);
 	void Delete_Account_menu(void);
-	void Delete_Teacher();
-	void Delete_Student();
-	void Delete_Teacher_Fam();
-	string CharToStr(char * contentChar);
+	void Delete_Teacher(void);
+	void Delete_Student(void);
+	void Delete_Teacher_Fam(void);
 	void DelLineData(string fileName, int lineNum);
+	void Get_On_Bus_And_Deposit_menu(void);
+	void Get_On_Bus(void);
+	void Teacher_Get_On_Bus(void);
+	void Student_Get_On_Bus(void);	
+	void Teacher_Fam_Get_On_Bus(void);
+	void Create_Bus(void);
+	void Deposit(void);
+	string CharToStr(char* contentChar);
 	string get_password(void);
 
-}
+};
 
 
 void System :: System_open(void){
@@ -132,7 +213,7 @@ void System :: System_choice(void){
 		} else if (choice == '2'){
 			Delete_Account_menu();	
 		} else if (choice == '3'){
-			/*  */	
+			Get_On_Bus_And_Deposit_menu(); 
 		} else if ( choice == '4'){
 			flag = 0;
 		}	
@@ -644,6 +725,8 @@ void System :: Delete_Teacher(){
 //			cout<< f_name << " " << f_id <<endl;
 //			cout<< s_name << " " << s_id <<endl;
 			while(s_name == f_name && s_id == f_id){
+				system("cls");
+				fflush(stdin);
 				cout<<"请输入您的密码:"<<endl;
 				string tmp_password = get_password();
 				if(f_password == tmp_password){
@@ -697,6 +780,8 @@ void System :: Delete_Student(){
 //			cout<< f_name << " " << f_id <<endl;
 //			cout<< s_name << " " << s_id <<endl;
 			while(s_name == f_name && s_id == f_id){
+				system("cls");
+				fflush(stdin);
 				cout<<"请输入您的密码:"<<endl;
 				string tmp_password = get_password();
 				if(f_password == tmp_password){
@@ -754,6 +839,8 @@ void System :: Delete_Teacher_Fam(){
 //			cout<< f_name << " " << f_id <<endl;
 //			cout<< s_name << " " << s_id <<endl;
 			while(s_name == f_name && s_id == f_id){
+				system("cls");
+				fflush(stdin);
 				cout<<"请输入您的密码:"<<endl;
 				string tmp_password = get_password();
 				if(f_password == tmp_password){
@@ -812,8 +899,127 @@ void System :: DelLineData(string fileName, int lineNum)
 	out.close();
 }
 
+void System :: Get_On_Bus_And_Deposit_menu(){
+	int status_flag = 1; 
+	while (status_flag){
+		cout<<"跳转中";
+		cout<<"..";Sleep(100);		
+		cout<<"..";Sleep(100);
+		cout<<"..";Sleep(100); 
+		system("cls") ;
+		cout<<"\n\n";
+		cout<<"\t\t\t *===============乘车/充值===============*\n\n\n";
+		cout<<"\t\t\t *=======================================*\n";
+		cout<<"\t\t\t|  * - * - * - * - * - * - * - * - * - *  |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t| |          [1]   搭乘车辆             | |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t| |          [2]   账户充值             | |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t| |          [3]   返回上级             | |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t|  * - * - * - * - * - * - * - * - * - *  |\n\n\n";
+		cout<<"请选择(1-3):";
+		char status_choice = getch();
+		while(status_choice!='1'&&status_choice!='2'&&status_choice!='3'){
+  			status_choice = getch();		
+		}
+		cout<<status_choice;
+		fflush(stdin);
+		system("cls");
+
+		if (status_choice == '1'){
+			Get_On_Bus();
+		} else if (status_choice == '2'){
+			Deposit();	
+		} else if (status_choice == '3'){
+			cout<<"正在返回上级";
+			cout<<"..";Sleep(100);		
+			cout<<"..";Sleep(100);
+			cout<<"..";Sleep(100); 
+			system("cls");
+			status_flag = 0;
+		}	
+		
+	}	
+}
+
+void System :: Get_On_Bus(){
+	int status_flag = 1; 
+	while (status_flag){
+		cout<<"跳转中";
+		cout<<"..";Sleep(100);		
+		cout<<"..";Sleep(100);
+		cout<<"..";Sleep(100); 
+		system("cls") ;
+		cout<<"\n\n";
+		cout<<"\t\t\t *================我要乘车===============*\n\n\n";
+		cout<<"\t\t\t *=======================================*\n";
+		cout<<"\t\t\t|  * - * - * - * - * - * - * - * - * - *  |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t| |          [1]   我是老师             | |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t| |          [2]   我是学生             | |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t| |          [3]   我是家属             | |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t| |          [4]   返回上级             | |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t|  * - * - * - * - * - * - * - * - * - *  |\n\n\n";
+		cout<<"请选择(1-4):";
+		char status_choice = getch();
+		while(status_choice!='1'&&status_choice!='2'&&status_choice!='3'&&status_choice!='4'){
+  			status_choice = getch();		
+		}
+		cout<<status_choice;
+		fflush(stdin);
+		system("cls");
+
+		if (status_choice == '1'){
+			Teacher_Get_On_Bus();
+		} else if (status_choice == '2'){
+			Student_Get_On_Bus();	
+		} else if (status_choice == '3'){
+			Teacher_Fam_Get_On_Bus();	
+		} else if (status_choice == '4'){
+			cout<<"正在返回上级";
+			cout<<"..";Sleep(100);		
+			cout<<"..";Sleep(100);
+			cout<<"..";Sleep(100); 
+			system("cls");
+			status_flag = 0;
+		}	
+		
+	}	
+}
+
+void System :: Teacher_Get_On_Bus(){
+	Bus bus1(51);
+	int bus1_number = bus1.Get_count();
+	Bus bus2(bus1_number);
+	cout<<" *==========================================当前车辆信息==========================================*\n\n\n";
+	bus1.Show_Status();
+	bus2.Show_Status();
+	Sleep(5000);
+}
+
+
+void System :: Student_Get_On_Bus()	{
+	
+}
+
+void System :: Teacher_Fam_Get_On_Bus()	{
+	
+}
+
+void System :: Deposit(){
+	
+	
+}
+
 int main(){
-	System::System_open();
+	System s;
+	s.System_open();
 	
 	return 0;
 }
