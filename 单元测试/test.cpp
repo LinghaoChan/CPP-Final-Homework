@@ -9,80 +9,19 @@
 #include <windows.h>
 using namespace std;
 
-class Bus{
-private:
-	int number_of_passengers;
-	int size;
-	int count;
-	string id;
-	string brand;
-	string driver; 
-public:
-	Bus(int un_permit);
-	string Get_Bus_Id(void);
-	int Get_count(void);
-	int Get_number_of_passengers(void);
-	void Show_Status(void);
-};
 
-Bus :: Bus(int un_permit){
-	string Filename = "Bus_Message.txt";
-	ifstream fin(Filename, std::ios::in);
-	char line[1024]={0};
-	string f_id = "";
-	string f_name = "";
-	string f_brand = "";
-	string f_size = "";
-	srand((unsigned)time(NULL));
-	int choice, number=0;  
-	while((choice = (rand()%50+1))==un_permit){	
-		//busy waiting
-	} 
-	while(fin.getline(line, sizeof(line))){
-		number++;
-		stringstream word(line);
-		if(choice == number){
-			word >> f_id;
-			word >> f_name;
-			word >> f_brand;
-			word >> f_size;	
-			id = f_id;
-			driver = f_name;
-			brand = f_brand;
-			size = atoi(f_size.c_str());
-			count = number;
-			number_of_passengers = rand()%size+1;
-			cout<<id<<driver<<brand<<size<<endl;
-			break;
-		}
-	}
-	fin.clear();
-	fin.close();
-}
+int main()
+{
 
-string Bus :: Get_Bus_Id(){
-	return id;
-}
-
-void Bus :: Show_Status(){
-	string status;
-	if(number_of_passengers<size){
-		status = "未满"; 
-	}
-	else{
-		status = "已满";
-	}
-	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  - * |\n";
-	cout<<"| *                                                                                             * |\n";
-	cout<<"| |   车型："<<brand<<"\t\t车牌："<<id<<"\t\t车上人数："<<number_of_passengers<<"\t\t状态："<<status<<"      | |\n";
-	cout<<"| *                                                                                             * |\n";
-	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  |\n\n\n";
-}
-
-int main(){
-	Bus bus1(2);
-	cout<<bus1.Get_Bus_Id()<<endl;
-	bus1.Show_Status();
+	time_t timep;
+	struct tm *p;
+	time (&timep);
+	p=gmtime(&timep);
+	printf("%d\n",p->tm_sec); /*获取当前秒*/
+	printf("%d\n",p->tm_min); /*获取当前分*/
+	printf("%d\n",8+p->tm_hour);/*获取当前时,这里获取西方的时间,刚好相差八个小时*/
+	int sec_time = p->tm_sec + (p->tm_min) * 60 + (8+p->tm_hour) * 60 * 60;
+	cout<<sec_time;
 	return 0;
 }
 /* 

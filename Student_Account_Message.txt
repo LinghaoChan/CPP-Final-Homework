@@ -1,12 +1,12 @@
-李翠雯 m 18130500210 经济与管理学院 cuiwenli
-夏梓熙 m 18130500368 网络与信息安全学院 zixixia
-潘逸豪 f 18140100012 人工智能学院 yihaopan
-李悦涵 m 18140100198 人工智能学院 yuehanli
-王子元 f 18140100226 计算机科学与技术学院 ziyuewang
-李佳乐 m 18130500017 电子工程学院 jialeli
-刘荣樵 m 18130500125 电子工程学院 rongqiaoliu
-陈佳灵 f 18130500155 电子工程学院 jialingchen
-王秋知 m 18040500115 机电工程学院 zhiqiuwang
-杨驰宇 m 18130500344 机电工程学院 chiyuyang
-陈凌灏 m 18130500143 通信工程学院 linghaochen
-邹思远 m 18130500209 通信工程学院 siyuanzhou
+李翠雯 m 18130500210 经济与管理学院 cuiwenli 0
+夏梓熙 m 18130500368 网络与信息安全学院 zixixia 0
+潘逸豪 f 18140100012 人工智能学院 yihaopan 0
+李悦涵 m 18140100198 人工智能学院 yuehanli 0
+王子元 f 18140100226 计算机科学与技术学院 ziyuewang 0
+李佳乐 m 18130500017 电子工程学院 jialeli 0
+刘荣樵 m 18130500125 电子工程学院 rongqiaoliu 0
+陈佳灵 f 18130500155 电子工程学院 jialingchen 0
+王秋知 m 18040500115 机电工程学院 zhiqiuwang 0
+杨驰宇 m 18130500344 机电工程学院 chiyuyang 0
+陈凌灏 m 18130500143 通信工程学院 linghaochen 0
+邹思远 m 18130500209 通信工程学院 siyuanzhou 0

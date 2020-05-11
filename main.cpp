@@ -8,6 +8,7 @@
 #include <sstream>
 #include <fstream>
 #include <time.h>
+#include <math.h>
 
 using namespace std;
 class People{
@@ -38,9 +39,15 @@ Student::Student(string name, string sex, string id, string password){
 class Teacher{
 private:
 	string college;	
-	double money;
-
+	int times;
+	string password;
+public:
+	Teacher(string i_name,string i_id, string i_sex, string i_college, string i_password, string i_times);
 };
+
+Teacher :: Teacher(string i_name,string i_id, string i_sex, string i_college, string i_password, string i_times){
+	
+}
 
 class Teacher_Fam{
 private:
@@ -54,6 +61,7 @@ private:
 	int number_of_passengers;
 	int size;
 	int count;
+	double place;
 	string id;
 	string brand;
 	string driver; 
@@ -62,7 +70,9 @@ public:
 	string Get_Bus_Id(void);
 	int Get_count(void);
 	int Get_number_of_passengers(void);
+	double Get_place(void);
 	void Show_Status(void);
+	void Get_On_One_Person(void);
 	bool Get_Status(void);
 };
 
@@ -93,6 +103,22 @@ Bus :: Bus(int un_permit){
 			size = atoi(f_size.c_str());
 			count = number;
 			number_of_passengers = rand()%size+1;
+			time_t nowtime;
+			struct tm* p;;
+			time(&nowtime);
+			p = localtime(&nowtime);
+			int system_time = p->tm_min;
+			if(system_time>=0.0 && system_time < 10.0){
+				place = system_time/10.0;
+			} else if(system_time>=10.0 && system_time<20.0){
+				place = 1.0;
+			} else if (system_time>=20.0 && system_time <35.0){
+				place = 1.0 + (system_time-20.0)/15.0;
+			} else if (system_time>=35.0 && system_time<45.0){
+				place = 2.0;
+			} else{
+				place = 2.0 + (system_time-45.0)/15.0;
+			}
 //			cout<<id<<driver<<brand<<size<<endl;
 			break;
 		}
@@ -135,6 +161,15 @@ bool Bus :: Get_Status(){
 		return false;
 	}
 }
+
+double Bus :: Get_place(){
+	return place;
+}
+
+void Bus :: Get_On_One_Person(){
+	number_of_passengers++;
+}
+
 
 class System{
 	int MONTH = 5; 
@@ -382,7 +417,7 @@ void System :: Create_Teacher(void){
 		    outfile.open("Teacher_Account_Message.txt", ios::app); 
 		    if(!outfile.is_open ())
 		        cout << "Open file failure" << endl;
-		    outfile << r_name << " " << r_id << " " << r_sex << " " << r_college << " " << s_password << endl;  
+		    outfile << r_name << " " << r_id << " " << r_sex << " " << r_college << " " << s_password << " 0" << endl;  
 		    outfile.close();
 		    cout<<"\07用户创建成功！"<<endl; 
 		    Sleep(500);
@@ -499,7 +534,7 @@ void System :: Create_Student(void){
 		    outfile.open("Student_Account_Message.txt", ios::app); 
 		    if(!outfile.is_open ())
 		        cout << "Open file failure" << endl;
-		    outfile << r_name << " " << r_sex << " " << r_id << " " << r_college << " " << s_password << endl;  
+		    outfile << r_name << " " << r_sex << " " << r_id << " " << r_college << " " << s_password << " 0" <<endl;  
 		    outfile.close();
 		    cout<<"\07用户创建成功！"<<endl; 
 		    Sleep(500);
@@ -616,7 +651,7 @@ void System :: Create_Teacher_Fam(){
 		    outfile.open("Teacher_Fam_Account_Message.txt", ios::app); 
 		    if(!outfile.is_open ())
 		        cout << "Open file failure" << endl;
-		    outfile << r_name << " " << r_sex << " " << r_id << " 0 20 " << s_password << endl;  
+		    outfile << r_name << " " << r_sex << " " << r_id << " 0.0 0 " << s_password << endl;  
 		    outfile.close();
 		    cout<<"\07用户创建成功！"<<endl; 
 		    Sleep(500);
@@ -1003,23 +1038,86 @@ void System :: Get_On_Bus(Bus& bus1, Bus& bus2){
 	}	
 }
 
-void System :: Teacher_Get_On_Bus(Bus& bus1, Bus& bus2){ //老师选乘车点，车辆的位置，系统时间的获取 
+void System :: Teacher_Get_On_Bus(Bus& bus1, Bus& bus2){ //老师信息验证 
 //	Bus bus1(51);
 //	int bus1_number = bus1.Get_count();
 //	Bus bus2(bus1_number);
-	cout<<" *==========================================当前车辆信息==========================================*\n\n\n";
-	bus1.Show_Status();
-	bus2.Show_Status();
-	bool status1 = bus1.Get_Status(), status2 = bus2.Get_Status();
-	if(status1&&status2){
-		
-	} else if(status1 && (!status2)){
-		
-	} else if((!status1) && status2){
-		
-	} else{
-		
+	time_t timep;
+	struct tm *p;
+	time (&timep);
+	p=gmtime(&timep);
+	printf("%d\n",p->tm_sec); /*获取当前秒*/
+	printf("%d\n",p->tm_min); /*获取当前分*/
+	printf("%d\n",8+p->tm_hour);/*获取当前时,这里获取西方的时间,刚好相差八个小时*/
+	int sec_time = p->tm_sec + (p->tm_min) * 60 + (8+p->tm_hour) * 60 * 60;
+	if(sec_time<28800 || sec_time>=64800){
+		cout<<"当日车辆已停运"<<endl;
+		cout<<"早上8点为第一班车，晚上18点为最后一班车"<<endl;
+		cout<<"按任意键重返回\n";
+		getch();		 
+	}	
+	else{
+		cout<<"请选择您目前的位置:"<<endl;
+		cout<<"[1]教学楼  [2]宿舍  请选择(1-2)："<<endl;
+		char status_choice = getch();
+		while(status_choice!='1'&&status_choice!='2'){
+			status_choice = getch();		
+		}
+		fflush(stdin);
+		system("cls");
+		double my_place;
+		if(status_choice == '1'){
+			my_place = 1.0; 
+		} else{
+			my_place = 2.0;
+		}
+		cout<<" *============================================车辆1信息=============================================*\n\n\n";
+		bus1.Show_Status();
+		cout<<" *============================================车辆2信息=============================================*\n\n\n";
+		bus2.Show_Status();
+		double bus1_place = bus1.Get_place(), bus2_place = bus2.Get_place();
+		if(bus1_place>my_place){
+			cout<<"\n您已错过车辆\n"<<endl;
+		} else if(bus1_place>=my_place-0.1 && bus1_place<my_place){
+			cout<<"\n车辆即将入站，请耐心等待\n"<<endl;
+		} else if(fabs(bus1_place-my_place) < 0.02){
+			
+			cout<<"\n车辆正在当前站点\n"<<endl;
+			cout<<"\n *====================================================================================*\n\n\n";
+			bool status1 = bus1.Get_Status(), status2 = bus2.Get_Status();
+			if(status1&&status2){
+				cout<<"车辆均未满员，请上车"<<endl;
+				cout<<"请选择车辆:"<<endl;
+				cout<<"[1]车辆一  [2]车辆二  请选择(1-2)："<<endl;
+				char choice = getch();
+				while(choice!='1'&&choice!='2'){
+					choice = getch();		
+				}
+				if(choice == '1'){
+					bus1.Get_On_One_Person();
+				} else{
+					bus2.Get_On_One_Person();
+				}
+			} else if(status1 && (!status2)){
+				cout<<"车辆二已满员，请上第一辆车";
+				bus1.Get_On_One_Person();
+			} else if((!status1) && status2){
+				cout<<"车辆一已满员，请上第二辆车";
+				bus2.Get_On_One_Person();
+			} else{
+				cout<<"两辆车均已满员，请等待下一班次";
+			}	
+				
+		} else{
+			cout<<"\n车辆距离您："<<fabs(bus1_place-my_place)<<"km\n"<<endl; 
+		}	
+		cout<<"按任意键重返回\n";
+		getch();	
 	}
+
+	
+//	cout <<  bus1_place << bus2_place;
+
 }
 
 
