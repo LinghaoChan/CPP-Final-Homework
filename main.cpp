@@ -152,12 +152,11 @@ public:
 	void Delete_Student(void);
 	void Delete_Teacher_Fam(void);
 	void DelLineData(string fileName, int lineNum);
-	void Get_On_Bus_And_Deposit_menu(void);
-	void Get_On_Bus(void);
-	void Teacher_Get_On_Bus(void);
-	void Student_Get_On_Bus(void);	
-	void Teacher_Fam_Get_On_Bus(void);
-	void Create_Bus(void);
+	void Get_On_Bus_And_Deposit_menu(Bus&, Bus&);
+	void Get_On_Bus(Bus&, Bus&);
+	void Teacher_Get_On_Bus(Bus&, Bus&);
+	void Student_Get_On_Bus(Bus&, Bus&);	
+	void Teacher_Fam_Get_On_Bus(Bus&, Bus&);
 	void Deposit(void);
 	string CharToStr(char* contentChar);
 	string get_password(void);
@@ -192,7 +191,9 @@ void System :: System_Initialize_User_Message(void){
 
 void System :: System_choice(void){
 	int flag = 1;
-	
+	Bus bus1(51);
+	int bus1_number = bus1.Get_count();
+	Bus bus2(bus1_number);
 	while(flag){
 		cout<<"\n\n";
 		cout<<"\t\t\t *==============西电公交系统=============*\n\n\n";
@@ -222,7 +223,7 @@ void System :: System_choice(void){
 		} else if (choice == '2'){
 			Delete_Account_menu();	
 		} else if (choice == '3'){
-			Get_On_Bus_And_Deposit_menu(); 
+			Get_On_Bus_And_Deposit_menu(bus1, bus2); 
 		} else if ( choice == '4'){
 			flag = 0;
 		}	
@@ -908,7 +909,7 @@ void System :: DelLineData(string fileName, int lineNum)
 	out.close();
 }
 
-void System :: Get_On_Bus_And_Deposit_menu(){
+void System :: Get_On_Bus_And_Deposit_menu(Bus& bus1, Bus& bus2){
 	int status_flag = 1; 
 	while (status_flag){
 		cout<<"跳转中";
@@ -938,7 +939,7 @@ void System :: Get_On_Bus_And_Deposit_menu(){
 		system("cls");
 
 		if (status_choice == '1'){
-			Get_On_Bus();
+			Get_On_Bus(bus1, bus2);
 		} else if (status_choice == '2'){
 			Deposit();	
 		} else if (status_choice == '3'){
@@ -953,7 +954,7 @@ void System :: Get_On_Bus_And_Deposit_menu(){
 	}	
 }
 
-void System :: Get_On_Bus(){
+void System :: Get_On_Bus(Bus& bus1, Bus& bus2){
 	int status_flag = 1; 
 	while (status_flag){
 		cout<<"跳转中";
@@ -985,11 +986,11 @@ void System :: Get_On_Bus(){
 		system("cls");
 
 		if (status_choice == '1'){
-			Teacher_Get_On_Bus();
+			Teacher_Get_On_Bus(bus1, bus2);
 		} else if (status_choice == '2'){
-			Student_Get_On_Bus();	
+			Student_Get_On_Bus(bus1, bus2);	
 		} else if (status_choice == '3'){
-			Teacher_Fam_Get_On_Bus();	
+			Teacher_Fam_Get_On_Bus(bus1, bus2);	
 		} else if (status_choice == '4'){
 			cout<<"正在返回上级";
 			cout<<"..";Sleep(100);		
@@ -1002,17 +1003,17 @@ void System :: Get_On_Bus(){
 	}	
 }
 
-void System :: Teacher_Get_On_Bus(){ //老师选乘车点，车辆的位置，系统时间的获取 
-	Bus bus1(51);
-	int bus1_number = bus1.Get_count();
-	Bus bus2(bus1_number);
+void System :: Teacher_Get_On_Bus(Bus& bus1, Bus& bus2){ //老师选乘车点，车辆的位置，系统时间的获取 
+//	Bus bus1(51);
+//	int bus1_number = bus1.Get_count();
+//	Bus bus2(bus1_number);
 	cout<<" *==========================================当前车辆信息==========================================*\n\n\n";
 	bus1.Show_Status();
 	bus2.Show_Status();
-	bool status1 = bus1.Show_Status(), status2 = bus2.Show_Status();
+	bool status1 = bus1.Get_Status(), status2 = bus2.Get_Status();
 	if(status1&&status2){
 		
-	} else if(stauts1 && (!stauts1)){
+	} else if(status1 && (!status2)){
 		
 	} else if((!status1) && status2){
 		
@@ -1022,11 +1023,11 @@ void System :: Teacher_Get_On_Bus(){ //老师选乘车点，车辆的位置，系统时间的获取
 }
 
 
-void System :: Student_Get_On_Bus()	{
+void System :: Student_Get_On_Bus(Bus& bus1, Bus& bus2)	{
 	
 }
 
-void System :: Teacher_Fam_Get_On_Bus()	{
+void System :: Teacher_Fam_Get_On_Bus(Bus& bus1, Bus& bus2)	{
 	
 }
 
