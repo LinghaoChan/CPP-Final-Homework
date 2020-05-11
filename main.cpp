@@ -108,9 +108,9 @@ Bus :: Bus(int un_permit){
 			time(&nowtime);
 			p = localtime(&nowtime);
 			int system_time = p->tm_min;
-			if(system_time>=0.0 && system_time < 10.0){
+			if(system_time>=0.0 && system_time < 1.0){
 				place = system_time/10.0;
-			} else if(system_time>=10.0 && system_time<20.0){
+			} else if(system_time>=1.0 && system_time<20.0){
 				place = 1.0;
 			} else if (system_time>=20.0 && system_time <35.0){
 				place = 1.0 + (system_time-20.0)/15.0;
@@ -193,6 +193,7 @@ public:
 	void Student_Get_On_Bus(Bus&, Bus&);	
 	void Teacher_Fam_Get_On_Bus(Bus&, Bus&);
 	void Deposit(void);
+	void Teacher_Get_On_Bus_Check(void);
 	string CharToStr(char* contentChar);
 	string get_password(void);
 
@@ -1098,11 +1099,14 @@ void System :: Teacher_Get_On_Bus(Bus& bus1, Bus& bus2){ //老师信息验证
 				} else{
 					bus2.Get_On_One_Person();
 				}
+				Teacher_Get_On_Bus_Check();
 			} else if(status1 && (!status2)){
 				cout<<"车辆二已满员，请上第一辆车";
+				Teacher_Get_On_Bus_Check();
 				bus1.Get_On_One_Person();
 			} else if((!status1) && status2){
 				cout<<"车辆一已满员，请上第二辆车";
+				Teacher_Get_On_Bus_Check();
 				bus2.Get_On_One_Person();
 			} else{
 				cout<<"两辆车均已满员，请等待下一班次";
@@ -1119,7 +1123,69 @@ void System :: Teacher_Get_On_Bus(Bus& bus1, Bus& bus2){ //老师信息验证
 //	cout <<  bus1_place << bus2_place;
 
 }
-
+void System :: Teacher_Get_On_Bus_Check(){
+	string Filename = "Teacher_Account_Message.txt";
+	while(true){
+		system("cls");
+		fflush(stdin);
+		string s_name; 
+		cout<<"请输入您的名字:"<<endl;
+		cin>>s_name; 
+		string s_id;
+		cout<<"请输入您的工号："<<endl;
+		cin>>s_id;		
+		
+		ifstream fin(Filename, std::ios::in);
+		char line[1024]={0};
+		string f_name = "";
+		string f_id = "";
+		string f_sex = "";
+		string f_college = "";
+		string f_password = "";
+		string f_times = "";
+		bool In_Message=false;
+		int number = 0;
+		
+		while(fin.getline(line, sizeof(line))){
+			number++;
+			stringstream word(line);
+			word >> f_name;
+			word >> f_id;
+			word >> f_sex;
+			word >> f_college;
+			word >> f_password;
+			word >> f_times;
+//			cout<< f_name << " " << f_id <<endl;
+//			cout<< s_name << " " << s_id <<endl;
+			while(s_name == f_name && s_id == f_id){
+				system("cls");
+				fflush(stdin);
+				cout<<"请输入您的密码:"<<endl;
+				string tmp_password = get_password();
+				if(f_password == tmp_password){
+					int temp = atoi(f_times.c_str());
+					temp ++;
+					f_times = to_string(temp);
+					DelLineData(Filename, number);
+					ofstream outfile;
+					outfile.open("Teacher_Account_Message.txt", ios::app); 
+					outfile << f_name << " " << f_id << " " << f_sex << " " << f_college << " " << f_password <<" " << f_times << endl; 
+					outfile.close(); 
+					In_Message = true;
+					break;
+				}
+			}
+			if(In_Message == true){
+				break;
+			}
+		}
+		fin.clear();
+		fin.close();
+		if(In_Message == true){
+			break;
+		}
+	}
+} 
 
 void System :: Student_Get_On_Bus(Bus& bus1, Bus& bus2)	{
 	
