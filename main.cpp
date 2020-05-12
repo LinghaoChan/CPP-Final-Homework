@@ -22,19 +22,42 @@ class Student : public People {
 private:
 	string college;	
 	string password;
+	int times;
 	double money;
 public:
-	Student();
-	Student(string name, string sex, string id, string password);
-	
+	Student(string, string, string, string, string, string, string);
+	~Student();
+	string Student_Tiems_Plus(void);
+	string Stuent_Money_Decrease(void); 
 }; 
-Student::Student(){
+
+Student :: Student(string i_name, string i_sex, string i_id, string i_college, string i_password, string i_times, string i_money){
+	name = i_name;
+	sex = i_sex;
+	id = i_id;
+	college = i_college;
+	password = i_password;
+	times = atoi(i_times.c_str()); 
+	money = atof(i_money.c_str());
+}
+
+
+Student :: ~Student(){
 	
 }
 
-Student::Student(string name, string sex, string id, string password){
-	
+string Student :: Student_Tiems_Plus(){
+	times++;
+	return to_string(times);
 }
+
+string Student :: Stuent_Money_Decrease(){
+	money = money - 2.0;
+	return to_string(money);
+}
+//void System :: Student_Tiems_Plus(){
+//	//
+//}
 
 class Teacher : public People {
 private:
@@ -552,7 +575,7 @@ void System :: Create_Student(void){
 		    outfile.open("Student_Account_Message.txt", ios::app); 
 		    if(!outfile.is_open ())
 		        cout << "Open file failure" << endl;
-		    outfile << r_name << " " << r_sex << " " << r_id << " " << r_college << " " << s_password << " 0" <<endl;  
+		    outfile << r_name << " " << r_sex << " " << r_id << " " << r_college << " " << s_password << " 0 0.0" <<endl;  
 		    outfile.close();
 		    cout<<"\07用户创建成功！"<<endl; 
 		    Sleep(500);
@@ -832,6 +855,7 @@ void System :: Delete_Student(){
 		string f_college = "";
 		string f_password = "";
 		string f_times = "";
+		string f_money = "";
 		bool In_Message=false;
 		int number = 0;
 		
@@ -844,6 +868,7 @@ void System :: Delete_Student(){
 			word >> f_college;
 			word >> f_password;
 			word >> f_times;
+			word >> f_money;
 //			cout<< f_name << " " << f_id <<endl;
 //			cout<< s_name << " " << s_id <<endl;
 			while(s_name == f_name && s_id == f_id){
@@ -1190,7 +1215,7 @@ void System :: Teacher_Get_On_Bus_Check(Bus& bus1, Bus& bus2){
 					f_times = teacher.Teacher_Tiems_Plus();
 					DelLineData(Filename, number);
 					ofstream outfile;
-					outfile.open("Teacher_Account_Message.txt", ios::app); 
+					outfile.open(Filename, ios::app); 
 					outfile << f_name << " " << f_id << " " << f_sex << " " << f_college << " " << f_password <<" " << f_times << endl; 
 					outfile.close(); 
 					In_Message = true;
@@ -1211,7 +1236,87 @@ void System :: Teacher_Get_On_Bus_Check(Bus& bus1, Bus& bus2){
 } 
 
 void System :: Student_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
-	
+	string Filename = "Student_Account_Message.txt";
+	while(true){
+		system("cls");
+		fflush(stdin);
+		cout<<" *============================================车辆1信息=============================================*\n\n\n";
+		bus1.Show_Status();
+		cout<<" *============================================车辆2信息=============================================*\n\n\n";
+		bus2.Show_Status();
+		string s_name; 
+		cout<<"请输入您的名字:"<<endl;
+		cin>>s_name; 
+		string s_id;
+		cout<<"请输入您的学号："<<endl;
+		cin>>s_id;		
+		
+		ifstream fin(Filename, std::ios::in);
+		char line[1024]={0};
+		string f_name = "";
+		string f_sex = "";
+		string f_id = "";
+		string f_college = "";
+		string f_password = "";
+		string f_times = "";
+		string f_money = "";
+		bool In_Message=false;
+		int number = 0;
+		
+		while(fin.getline(line, sizeof(line))){
+			number++;
+			stringstream word(line);
+			word >> f_name;
+			word >> f_sex;
+			word >> f_id;
+			word >> f_college;
+			word >> f_password;
+			word >> f_times;
+			word >> f_money;
+			double check_times = atoi(f_times.c_str());
+			if(s_name == f_name && s_id == f_id && check_times < 2.0){
+				cout<<"账户余额不足2.0元，请充值"<<endl;
+				cout<<"按任意键返回"<<endl;
+				getch(); 
+				In_Message = true;
+				break;
+			}
+//			cout<< f_name << " " << f_id <<endl;
+//			cout<< s_name << " " << s_id <<endl;
+			while(s_name == f_name && s_id == f_id){
+				Student student(f_name, f_sex, f_id, f_college, f_password, f_times, f_money);
+				system("cls");
+				fflush(stdin);
+				cout<<"请输入您的密码:"<<endl;
+				string tmp_password = get_password();
+				if(f_password == tmp_password){
+					f_times = student.Student_Tiems_Plus();
+					f_money = student.Stuent_Money_Decrease();
+					DelLineData(Filename, number);
+					ofstream outfile;
+					outfile.open(Filename, ios::app); 
+					outfile << f_name << " " << f_id << " " << f_sex << " " << f_college << " " << f_password <<" " << f_times << f_money <<endl; 
+					outfile.close(); 
+					if(check_times<7.0){
+						cout<<"当前账户余额不足5.0元，请尽快充值"<<endl;
+						cout<<"按任意键返回";
+						getch();
+					}
+					In_Message = true;
+					student.~Student();
+					break;
+				}
+			}
+			if(In_Message == true){
+				break;
+			}
+		}
+		fin.clear();
+		fin.close();
+		if(In_Message == true){
+			break;
+		}
+	}	
 }
 
 void System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
