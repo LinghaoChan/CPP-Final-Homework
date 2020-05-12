@@ -14,7 +14,7 @@ using namespace std;
 class People{
 public:
 	string name;
-	char sex;
+	string sex;
 	string id;
 };
 
@@ -36,7 +36,7 @@ Student::Student(string name, string sex, string id, string password){
 	
 }
 
-class Teacher{
+class Teacher : public People {
 private:
 	string college;	
 	int times;
@@ -46,10 +46,15 @@ public:
 };
 
 Teacher :: Teacher(string i_name,string i_id, string i_sex, string i_college, string i_password, string i_times){
-	
+	name = i_name;
+	id = i_id;
+	sex = i_sex;
+	college = i_college;
+	password = i_password;
+	times = atoi(i_times.c_str()); 
 }
 
-class Teacher_Fam{
+class Teacher_Fam : public People {
 private:
 	string password;
 public:
