@@ -752,7 +752,7 @@ void System :: Delete_Teacher(){
 		cout<<"ÇëÊäÈëÄúµÄÃû×Ö:"<<endl;
 		cin>>s_name; 
 		string s_id;
-		cout<<"ÇëÊäÈëÄúµÄ¼ÒÊô±àºÅ£º"<<endl;
+		cout<<"ÇëÊäÈëÄúµÄ¹¤ºÅ£º"<<endl;
 		cin>>s_id;		
 		
 		ifstream fin(Filename, std::ios::in);
@@ -762,6 +762,7 @@ void System :: Delete_Teacher(){
 		string f_sex = "";
 		string f_college = "";
 		string f_password = "";
+		string f_times = ""; 
 		bool In_Message=false;
 		int number = 0;
 		
@@ -773,6 +774,7 @@ void System :: Delete_Teacher(){
 			word >> f_sex;
 			word >> f_college;
 			word >> f_password;
+			word >> f_times;
 //			cout<< f_name << " " << f_id <<endl;
 //			cout<< s_name << " " << s_id <<endl;
 			while(s_name == f_name && s_id == f_id){
@@ -817,6 +819,7 @@ void System :: Delete_Student(){
 		string f_sex = "";
 		string f_college = "";
 		string f_password = "";
+		string f_times = "";
 		bool In_Message=false;
 		int number = 0;
 		
@@ -828,6 +831,7 @@ void System :: Delete_Student(){
 			word >> f_id;
 			word >> f_college;
 			word >> f_password;
+			word >> f_times;
 //			cout<< f_name << " " << f_id <<endl;
 //			cout<< s_name << " " << s_id <<endl;
 			while(s_name == f_name && s_id == f_id){
@@ -1160,6 +1164,7 @@ void System :: Teacher_Get_On_Bus_Check(){
 			word >> f_college;
 			word >> f_password;
 			word >> f_times;
+			Teacher teacher(f_name, f_id, f_sex, f_college, f_password, f_times);
 //			cout<< f_name << " " << f_id <<endl;
 //			cout<< s_name << " " << s_id <<endl;
 			while(s_name == f_name && s_id == f_id){
@@ -1177,6 +1182,7 @@ void System :: Teacher_Get_On_Bus_Check(){
 					outfile << f_name << " " << f_id << " " << f_sex << " " << f_college << " " << f_password <<" " << f_times << endl; 
 					outfile.close(); 
 					In_Message = true;
+					teacher.~Teacher();
 					break;
 				}
 			}
