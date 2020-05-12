@@ -43,6 +43,8 @@ private:
 	string password;
 public:
 	Teacher(string i_name,string i_id, string i_sex, string i_college, string i_password, string i_times);
+	~Teacher(); 
+	string Teacher_Tiems_Plus();
 };
 
 Teacher :: Teacher(string i_name,string i_id, string i_sex, string i_college, string i_password, string i_times){
@@ -52,6 +54,15 @@ Teacher :: Teacher(string i_name,string i_id, string i_sex, string i_college, st
 	college = i_college;
 	password = i_password;
 	times = atoi(i_times.c_str()); 
+}
+
+Teacher :: ~Teacher(){
+	
+}
+
+string Teacher :: Teacher_Tiems_Plus() {
+	times++;
+	return to_string(times);;
 }
 
 class Teacher_Fam : public People {
@@ -178,6 +189,7 @@ void Bus :: Get_On_One_Person(){
 
 class System{
 	int MONTH = 5; 
+	void (System :: *Function_Get_On_Bus_pointer[3])(Bus&, Bus&) = {&System :: Teacher_Get_On_Bus_Check, &System :: Student_Get_On_Bus_Check, &System :: Teacher_Fam_Get_On_Bus_Check};
 public:
 	void System_open(void);
 	void System_choice(void);
@@ -193,12 +205,12 @@ public:
 	void Delete_Teacher_Fam(void);
 	void DelLineData(string fileName, int lineNum);
 	void Get_On_Bus_And_Deposit_menu(Bus&, Bus&);
-	void Get_On_Bus(Bus&, Bus&);
-	void Teacher_Get_On_Bus(Bus&, Bus&);
-	void Student_Get_On_Bus(Bus&, Bus&);	
-	void Teacher_Fam_Get_On_Bus(Bus&, Bus&);
+	void Get_On_Bus(Bus&, Bus&);	
+	void People_Get_On_Bus(Bus&, Bus&, int);
 	void Deposit(void);
-	void Teacher_Get_On_Bus_Check(void);
+	void Teacher_Get_On_Bus_Check(Bus&, Bus&);
+	void Student_Get_On_Bus_Check(Bus&, Bus&);
+	void Teacher_Fam_Get_On_Bus_Check(Bus&, Bus&);
 	string CharToStr(char* contentChar);
 	string get_password(void);
 
@@ -1031,11 +1043,11 @@ void System :: Get_On_Bus(Bus& bus1, Bus& bus2){
 		system("cls");
 
 		if (status_choice == '1'){
-			Teacher_Get_On_Bus(bus1, bus2);
+			People_Get_On_Bus(bus1, bus2, 0);
 		} else if (status_choice == '2'){
-			Student_Get_On_Bus(bus1, bus2);	
+			People_Get_On_Bus(bus1, bus2, 1);	
 		} else if (status_choice == '3'){
-			Teacher_Fam_Get_On_Bus(bus1, bus2);	
+			People_Get_On_Bus(bus1, bus2, 2);	
 		} else if (status_choice == '4'){
 			cout<<"正在返回上级";
 			cout<<"..";Sleep(100);		
@@ -1048,17 +1060,14 @@ void System :: Get_On_Bus(Bus& bus1, Bus& bus2){
 	}	
 }
 
-void System :: Teacher_Get_On_Bus(Bus& bus1, Bus& bus2){ //老师信息验证 
+void System :: People_Get_On_Bus(Bus& bus1, Bus& bus2, int ch){ //老师信息验证 
 //	Bus bus1(51);
 //	int bus1_number = bus1.Get_count();
-//	Bus bus2(bus1_number);
+//	Bus bus2(bus1_number);	
 	time_t timep;
 	struct tm *p;
 	time (&timep);
 	p=gmtime(&timep);
-	printf("%d\n",p->tm_sec); /*获取当前秒*/
-	printf("%d\n",p->tm_min); /*获取当前分*/
-	printf("%d\n",8+p->tm_hour);/*获取当前时,这里获取西方的时间,刚好相差八个小时*/
 	int sec_time = p->tm_sec + (p->tm_min) * 60 + (8+p->tm_hour) * 60 * 60;
 	if(sec_time<28800 || sec_time>=64800){
 		cout<<"当日车辆已停运"<<endl;
@@ -1096,7 +1105,9 @@ void System :: Teacher_Get_On_Bus(Bus& bus1, Bus& bus2){ //老师信息验证
 			cout<<"\n *====================================================================================*\n\n\n";
 			bool status1 = bus1.Get_Status(), status2 = bus2.Get_Status();
 			if(status1&&status2){
-				cout<<"车辆均未满员，请上车"<<endl;
+//				Teacher_Get_On_Bus_Check();
+				(this->*Function_Get_On_Bus_pointer[ch])(bus1, bus2);
+				cout<<"\n车辆均未满员，请上车"<<endl;
 				cout<<"请选择车辆:"<<endl;
 				cout<<"[1]车辆一  [2]车辆二  请选择(1-2)："<<endl;
 				char choice = getch();
@@ -1108,14 +1119,13 @@ void System :: Teacher_Get_On_Bus(Bus& bus1, Bus& bus2){ //老师信息验证
 				} else{
 					bus2.Get_On_One_Person();
 				}
-				Teacher_Get_On_Bus_Check();
 			} else if(status1 && (!status2)){
+				(this->*Function_Get_On_Bus_pointer[ch])(bus1, bus2);
 				cout<<"车辆二已满员，请上第一辆车";
-				Teacher_Get_On_Bus_Check();
 				bus1.Get_On_One_Person();
 			} else if((!status1) && status2){
+				(this->*Function_Get_On_Bus_pointer[ch])(bus1, bus2);
 				cout<<"车辆一已满员，请上第二辆车";
-				Teacher_Get_On_Bus_Check();
 				bus2.Get_On_One_Person();
 			} else{
 				cout<<"两辆车均已满员，请等待下一班次";
@@ -1132,11 +1142,15 @@ void System :: Teacher_Get_On_Bus(Bus& bus1, Bus& bus2){ //老师信息验证
 //	cout <<  bus1_place << bus2_place;
 
 }
-void System :: Teacher_Get_On_Bus_Check(){
+void System :: Teacher_Get_On_Bus_Check(Bus& bus1, Bus& bus2){
 	string Filename = "Teacher_Account_Message.txt";
 	while(true){
 		system("cls");
 		fflush(stdin);
+		cout<<" *============================================车辆1信息=============================================*\n\n\n";
+		bus1.Show_Status();
+		cout<<" *============================================车辆2信息=============================================*\n\n\n";
+		bus2.Show_Status();
 		string s_name; 
 		cout<<"请输入您的名字:"<<endl;
 		cin>>s_name; 
@@ -1164,18 +1178,16 @@ void System :: Teacher_Get_On_Bus_Check(){
 			word >> f_college;
 			word >> f_password;
 			word >> f_times;
-			Teacher teacher(f_name, f_id, f_sex, f_college, f_password, f_times);
 //			cout<< f_name << " " << f_id <<endl;
 //			cout<< s_name << " " << s_id <<endl;
 			while(s_name == f_name && s_id == f_id){
+				Teacher teacher(f_name, f_id, f_sex, f_college, f_password, f_times);
 				system("cls");
 				fflush(stdin);
 				cout<<"请输入您的密码:"<<endl;
 				string tmp_password = get_password();
 				if(f_password == tmp_password){
-					int temp = atoi(f_times.c_str());
-					temp ++;
-					f_times = to_string(temp);
+					f_times = teacher.Teacher_Tiems_Plus();
 					DelLineData(Filename, number);
 					ofstream outfile;
 					outfile.open("Teacher_Account_Message.txt", ios::app); 
@@ -1198,11 +1210,11 @@ void System :: Teacher_Get_On_Bus_Check(){
 	}
 } 
 
-void System :: Student_Get_On_Bus(Bus& bus1, Bus& bus2)	{
+void System :: Student_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 	
 }
 
-void System :: Teacher_Fam_Get_On_Bus(Bus& bus1, Bus& bus2)	{
+void System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 	
 }
 
