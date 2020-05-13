@@ -105,6 +105,7 @@ public:
 	string Teacher_Fam_Times_Plus(void);
 	string Teacher_Fam_Money_Decrease(void); 
 	int Get_Times(void);
+	string Teacher_Fam_Deposit(double);
 };
 
 Teacher_Fam :: Teacher_Fam(string i_name, string i_sex, string i_id, string i_money, string i_times, string i_password){
@@ -132,6 +133,11 @@ string Teacher_Fam :: Teacher_Fam_Money_Decrease(){
 
 int Teacher_Fam :: Get_Times(){
 	return times;
+}
+
+string Teacher_Fam :: Teacher_Fam_Deposit(double deposit_money){
+	money += deposit_money;
+	return to_string(money);
 }
 
 class Bus{
@@ -1553,8 +1559,6 @@ void System :: Student_Deposit(void){
 				cout<<"请输入您的密码:"<<endl;
 				string tmp_password = get_password();
 				if(f_password == tmp_password){
-					f_times = student.Student_Times_Plus();
-					f_money = student.Stuent_Money_Decrease();
 					DelLineData(Filename, number);
 					ofstream outfile;
 					outfile.open(Filename, ios::app); 
@@ -1578,7 +1582,70 @@ void System :: Student_Deposit(void){
 }
 
 void System :: Teacher_Fam_Deposit(void){
-	
+	string Filename = "Teacher_Fam_Account_Message.txt";
+	while(true){
+		system("cls");
+		fflush(stdin);
+		string s_name; 
+		cout<<"请输入您的名字:"<<endl;
+		cin>>s_name; 
+		string s_id;
+		cout<<"请输入您的家属号："<<endl;
+		cin>>s_id;
+		
+		ifstream fin(Filename, std::ios::in);
+		char line[1024]={0};
+		string f_name = "";
+		string f_sex = "";
+		string f_id = "";
+		string f_money = "";
+		string f_times = "";
+		string f_password = "";
+		bool In_Message=false;
+		int number = 0;
+		
+		while(fin.getline(line, sizeof(line))){
+			number++;
+			stringstream word(line);
+			word >> f_name;
+			word >> f_sex;
+			word >> f_id;
+			word >> f_money;
+			word >> f_times;
+			word >> f_password;
+			double check_money = atof(f_money.c_str());
+			while(s_name == f_name && s_id == f_id){
+				cout<<"请输入您需要充值的金额："<<endl;
+				string string_money;
+				cin>>string_money;
+				double double_money = atof(string_money.c_str());
+				Teacher_Fam teacher_fam(f_name, f_sex, f_id, f_money, f_times, f_password);
+				string final_money = teacher_fam.Teacher_Fam_Deposit(double_money);
+				system("cls");
+				fflush(stdin);
+				cout<<"请输入您的密码:"<<endl;
+				string tmp_password = get_password();
+				if(f_password == tmp_password){
+					DelLineData(Filename, number);
+					ofstream outfile;
+					outfile.open(Filename, ios::app); 
+					outfile << f_name << " " << f_sex << " " << f_id << " " << final_money << " " << f_times <<" " << f_password <<endl; 
+					outfile.close(); 
+					In_Message = true;
+					teacher_fam.~Teacher_Fam();
+					break;
+				}
+			}
+			if(In_Message == true){
+				break;
+			}
+		}
+		fin.clear();
+		fin.close();
+		if(In_Message == true){
+			break;
+		}
+	}	
 }
 
 int main(){
