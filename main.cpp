@@ -29,6 +29,7 @@ public:
 	~Student();
 	string Student_Times_Plus(void);
 	string Stuent_Money_Decrease(void); 
+	string Student_Deposit(double);
 }; 
 
 Student :: Student(string i_name, string i_sex, string i_id, string i_college, string i_password, string i_times, string i_money){
@@ -53,6 +54,11 @@ string Student :: Student_Times_Plus(){
 
 string Student :: Stuent_Money_Decrease(){
 	money = money - 2.0;
+	return to_string(money);
+}
+
+string Student :: Student_Deposit(double deposit){
+	money += deposit;
 	return to_string(money);
 }
 //void System :: Student_Tiems_Plus(){
@@ -268,7 +274,7 @@ public:
 	void Teacher_Get_On_Bus_Check(Bus&, Bus&);
 	void Student_Get_On_Bus_Check(Bus&, Bus&);
 	void Teacher_Fam_Get_On_Bus_Check(Bus&, Bus&);
-	void People_Deposit(int);
+//	void People_Deposit(int);
 	void Student_Deposit(void);
 	void Teacher_Fam_Deposit(void);
 	string CharToStr(char* contentChar);
@@ -1308,7 +1314,7 @@ void System :: Student_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 			word >> f_password;
 			word >> f_times;
 			word >> f_money;
-			double check_money = atoi(f_money.c_str());
+			double check_money = atof(f_money.c_str());
 			if(s_name == f_name && s_id == f_id && check_money < 2.0){
 				cout<<"账户余额不足2.0元，请充值"<<endl;
 				cout<<"按任意键返回"<<endl;
@@ -1390,7 +1396,7 @@ void System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 			word >> f_money;
 			word >> f_times;
 			word >> f_password;
-			double check_money = atoi(f_money.c_str());
+			double check_money = atof(f_money.c_str());
 			if(s_name == f_name && s_id == f_id && check_money < 2.0){
 				cout<<"账户余额不足2.0元，请充值"<<endl;
 				cout<<"按任意键返回"<<endl;
@@ -1481,9 +1487,9 @@ void System :: Deposit(){
 		system("cls");
 
 		if (status_choice == '1'){
-			People_Deposit(0);
+			(this->*People_Deposit_pointer[0])();
 		} else if (status_choice == '2'){
-			People_Deposit(1);	
+			(this->*People_Deposit_pointer[1])();	
 		} else if (status_choice == '3'){
 			cout<<"正在返回上级";
 			cout<<"..";Sleep(100);		
@@ -1495,13 +1501,80 @@ void System :: Deposit(){
 		
 	}	
 }
-
-void System :: People_Deposit(int ch){
-	
-}
+//
+//void System :: People_Deposit(int ch){
+//	
+//}
 
 void System :: Student_Deposit(void){
-	
+	string Filename = "Student_Account_Message.txt";
+	while(true){
+		system("cls");
+		fflush(stdin);
+		string s_name; 
+		cout<<"请输入您的名字:"<<endl;
+		cin>>s_name; 
+		string s_id;
+		cout<<"请输入您的学号："<<endl;
+		cin>>s_id;		
+		
+		ifstream fin(Filename, std::ios::in);
+		char line[1024]={0};
+		string f_name = "";
+		string f_sex = "";
+		string f_id = "";
+		string f_college = "";
+		string f_password = "";
+		string f_times = "";
+		string f_money = "";
+		bool In_Message=false;
+		int number = 0;
+		
+		while(fin.getline(line, sizeof(line))){
+			number++;
+			stringstream word(line);
+			word >> f_name;
+			word >> f_sex;
+			word >> f_id;
+			word >> f_college;
+			word >> f_password;
+			word >> f_times;
+			word >> f_money;
+			double check_money = atof(f_money.c_str());
+			while(s_name == f_name && s_id == f_id){
+				cout<<"请输入您需要充值的金额："<<endl;
+				string string_money;
+				cin>>string_money;
+				double double_money = atof(string_money.c_str());
+				Student student(f_name, f_sex, f_id, f_college, f_password, f_times, f_money);
+				string final_money = student.Student_Deposit(double_money);
+				system("cls");
+				fflush(stdin);
+				cout<<"请输入您的密码:"<<endl;
+				string tmp_password = get_password();
+				if(f_password == tmp_password){
+					f_times = student.Student_Times_Plus();
+					f_money = student.Stuent_Money_Decrease();
+					DelLineData(Filename, number);
+					ofstream outfile;
+					outfile.open(Filename, ios::app); 
+					outfile << f_name << " " << f_sex << " " << f_id << " " << f_college << " " << f_password <<" " << f_times << " "  << final_money <<endl; 
+					outfile.close(); 
+					In_Message = true;
+					student.~Student();
+					break;
+				}
+			}
+			if(In_Message == true){
+				break;
+			}
+		}
+		fin.clear();
+		fin.close();
+		if(In_Message == true){
+			break;
+		}
+	}
 }
 
 void System :: Teacher_Fam_Deposit(void){
