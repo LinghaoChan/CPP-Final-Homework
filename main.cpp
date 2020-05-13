@@ -246,6 +246,7 @@ void Bus :: Get_On_One_Person(){
 class System{
 	int MONTH = 5; 
 	void (System :: *Function_Get_On_Bus_pointer[3])(Bus&, Bus&) = {&System :: Teacher_Get_On_Bus_Check, &System :: Student_Get_On_Bus_Check, &System :: Teacher_Fam_Get_On_Bus_Check};
+	void (System :: *People_Deposit_pointer[2])(void) = {&System :: Student_Deposit, &System :: Teacher_Fam_Deposit};
 public:
 	void System_open(void);
 	void System_choice(void);
@@ -267,6 +268,9 @@ public:
 	void Teacher_Get_On_Bus_Check(Bus&, Bus&);
 	void Student_Get_On_Bus_Check(Bus&, Bus&);
 	void Teacher_Fam_Get_On_Bus_Check(Bus&, Bus&);
+	void People_Deposit(int);
+	void Student_Deposit(void);
+	void Teacher_Fam_Deposit(void);
 	string CharToStr(char* contentChar);
 	string get_password(void);
 
@@ -1448,7 +1452,59 @@ void System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 }
 
 void System :: Deposit(){
+	int status_flag = 1; 
+	while (status_flag){
+		cout<<"跳转中";
+		cout<<"..";Sleep(100);		
+		cout<<"..";Sleep(100);
+		cout<<"..";Sleep(100); 
+		system("cls") ;
+		cout<<"\n\n";
+		cout<<"\t\t\t *================我要充值===============*\n\n\n";
+		cout<<"\t\t\t *=======================================*\n";
+		cout<<"\t\t\t|  * - * - * - * - * - * - * - * - * - *  |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t| |          [1]   我是学生             | |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t| |          [2]   我是家属             | |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t| |          [3]   返回上级             | |\n";
+		cout<<"\t\t\t| *                                     * |\n";
+		cout<<"\t\t\t|  * - * - * - * - * - * - * - * - * - *  |\n\n\n";
+		cout<<"请选择(1-3):";
+		char status_choice = getch();
+		while(status_choice!='1'&&status_choice!='2'&&status_choice!='3'){
+  			status_choice = getch();		
+		}
+		cout<<status_choice;
+		fflush(stdin);
+		system("cls");
+
+		if (status_choice == '1'){
+			People_Deposit(0);
+		} else if (status_choice == '2'){
+			People_Deposit(1);	
+		} else if (status_choice == '3'){
+			cout<<"正在返回上级";
+			cout<<"..";Sleep(100);		
+			cout<<"..";Sleep(100);
+			cout<<"..";Sleep(100); 
+			system("cls");
+			status_flag = 0;
+		}	
+		
+	}	
+}
+
+void System :: People_Deposit(int ch){
 	
+}
+
+void System :: Student_Deposit(void){
+	
+}
+
+void System :: Teacher_Fam_Deposit(void){
 	
 }
 
