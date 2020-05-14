@@ -42,7 +42,6 @@ Student :: Student(string i_name, string i_sex, string i_id, string i_college, s
 	money = atof(i_money.c_str());
 }
 
-
 Student :: ~Student(){
 	
 }
@@ -61,9 +60,6 @@ string Student :: Student_Deposit(double deposit){
 	money += deposit;
 	return to_string(money);
 }
-//void System :: Student_Tiems_Plus(){
-//	//
-//}
 
 class Teacher : public People {
 private:
@@ -164,10 +160,7 @@ Bus :: Bus(int un_permit){
 	string Filename = "Bus_Message.txt";
 	ifstream fin(Filename, std::ios::in);
 	char line[1024]={0};
-	string f_id = "";
-	string f_name = "";
-	string f_brand = "";
-	string f_size = "";
+	string f_id = "", f_name = "", f_brand = "", f_size = "";
 	srand((unsigned)time(NULL));
 	int choice, number=0;  
 	while((choice = (rand()%50+1))==un_permit){	
@@ -177,10 +170,7 @@ Bus :: Bus(int un_permit){
 		number++;
 		stringstream word(line);
 		if(choice == number){
-			word >> f_id;
-			word >> f_name;
-			word >> f_brand;
-			word >> f_size;	
+			word >> f_id >> f_name >> f_brand >> f_size;	
 			id = f_id;
 			driver = f_name;
 			brand = f_brand;
@@ -254,7 +244,6 @@ void Bus :: Get_On_One_Person(){
 	number_of_passengers++;
 }
 
-
 class System{
 	int MONTH = 5; 
 	void (System :: *Function_Get_On_Bus_pointer[3])(Bus&, Bus&) = {&System :: Teacher_Get_On_Bus_Check, &System :: Student_Get_On_Bus_Check, &System :: Teacher_Fam_Get_On_Bus_Check};
@@ -280,7 +269,6 @@ public:
 	void Teacher_Get_On_Bus_Check(Bus&, Bus&);
 	void Student_Get_On_Bus_Check(Bus&, Bus&);
 	void Teacher_Fam_Get_On_Bus_Check(Bus&, Bus&);
-//	void People_Deposit(int);
 	void Student_Deposit(void);
 	void Teacher_Fam_Deposit(void);
 	string CharToStr(char* contentChar);
@@ -297,21 +285,16 @@ void System :: System_open(void){
 	Sleep(500);
 	system("cls"); 	
 	cout<<"\n\n\n\n\n\n\t\t\t数据获取中";
-	System_Initialize_User_Message();							//3?ê??ˉó??§D??￠￡¨2?D′ò?μ?μ?￡? 
+	System_Initialize_User_Message();						
 	system("cls"); 	
-	System_choice();											//1|?ü????￡¨μY1é?D￡? 
+	System_choice();										
 }
 
 void System :: System_Initialize_User_Message(void){
 	Student* student_pointer = (Student*) malloc(500 * sizeof(Student));
-	/*  */
-	cout<<"..";Sleep(100);	
-	/*  */		
-	cout<<"..";Sleep(100);
-	/*  */	
-	cout<<"..";Sleep(100);
-	/*  */	
-	cout<<"..";Sleep(100);	
+	cout<<"..";Sleep(200);		
+	cout<<"..";Sleep(200);
+	cout<<"..";Sleep(200);
 }
 
 void System :: System_choice(void){
@@ -342,7 +325,6 @@ void System :: System_choice(void){
 		cout<<choice;
 		fflush(stdin);
 		system("cls");
-
 		if (choice == '1'){
 			Create_Account_menu();
 		} else if (choice == '2'){
@@ -353,7 +335,6 @@ void System :: System_choice(void){
 			flag = 0;
 		}	
 	}
-
 	system("cls");
 	fflush(stdin);
 	printf("你已经安全退出系统!(按任意键关闭界面)\n\n\t欢迎您的再次使用!\n\n");
@@ -404,7 +385,6 @@ void System :: Create_Account_menu(void){
 			system("cls");
 			status_flag = 0;
 		}	
-		
 	}
 }
 
@@ -418,30 +398,19 @@ void System :: Create_Teacher(void){
 	{
 		system("cls");
 		fflush(stdin);
-	
 		string s_name; 
 		cout<<"请输入您的名字:"<<endl;
 		cin>>s_name;
-		
 		string s_id;
 		cout<<"请输入您的工号"<<endl;
 		cin>>s_id;		
-		
-		
 		ifstream fin("Teacher_Message.txt", std::ios::in);
 		char line[1024]={0};
-		string f_name = "";
-		string f_id = "";
-		string f_sex = "";
-		string f_college = "";
+		string f_name = "", f_id = "", f_sex = "", f_college = "";
 		bool In_Message=false;
 		while(fin.getline(line, sizeof(line))){
 			stringstream word(line);
-			word >> f_name;
-			word >> f_id;
-			word >> f_sex;
-			word >> f_college;
-//			cout<< f_name << " " << f_id << " " << f_sex << " "<< f_college <<endl;
+			word >> f_name >> f_id >> f_sex >> f_college;
 			if(s_name == f_name && s_id == f_id){
 				r_id = s_id;
 				r_name = s_name;
@@ -456,20 +425,12 @@ void System :: Create_Teacher(void){
 		
 		ifstream fin2("Teacher_Account_Message.txt", std::ios::in);
 		char line2[1024]={0};
-		string accout_name = "";
-		string accout_id = "";
-		string accout_sex = "";
-		string accout_college = "";
-		string accout_password = "";
+		string accout_name = "", accout_id = "", accout_sex = "", accout_college = "", accout_password = "";
 		bool Account_Message = false;		
 		while(fin2.getline(line2, sizeof(line2)))
 		{
 			stringstream word2(line2);
-			word2 >> accout_name;
-			word2 >> accout_id;
-			word2 >> accout_sex;
-			word2 >> accout_college;
-			word2 >> accout_password;
+			word2 >> accout_name >> accout_id >> accout_sex >> accout_college >> accout_password;
 //			cout<< f_name << " " << f_id << " " << f_sex << " "<< f_college <<endl;
 			if(s_name == accout_name && s_id == accout_id){
 				Account_Message = true;
@@ -522,40 +483,25 @@ void System :: Create_Teacher(void){
 }
 
 void System :: Create_Student(void){
-	string r_name = "";
-	string r_id = ""; 
-	string r_sex = "";
-	string r_college = "";
-	string r_money = "0";
+	string r_name = "", r_id = "", r_sex = "", r_college = "", r_money = "0";
 	bool flag = false;
 	while(true)
 	{
 		system("cls");
 		fflush(stdin);
-	
 		string s_name; 
 		cout<<"请输入您的名字:"<<endl;
 		cin>>s_name;
-		
 		string s_id;
 		cout<<"请输入您的学号"<<endl;
 		cin>>s_id;		
-		
-		
 		ifstream fin("Student_Message.txt", std::ios::in);
 		char line[1024]={0};
-		string f_name = "";
-		string f_id = "";
-		string f_sex = "";
-		string f_college = "";
+		string f_name = "", f_id = "", f_sex = "", f_college = "";
 		bool In_Message=false;
 		while(fin.getline(line, sizeof(line))){
 			stringstream word(line);
-			word >> f_name;
-			word >> f_sex;
-			word >> f_id;
-			word >> f_college;
-//			cout<< f_name << " " << f_id <<endl;
+			word >> f_name >> f_sex >> f_id >> f_college;
 			if(s_name == f_name && s_id == f_id){
 				r_id = s_id;
 				r_name = s_name;
@@ -570,30 +516,19 @@ void System :: Create_Student(void){
 		
 		ifstream fin2("Student_Account_Message.txt", std::ios::in);
 		char line2[1024]={0};
-		string accout_name = "";
-		string accout_id = "";
-		string accout_sex = "";
-		string accout_college = "";
-		string accout_password = "";
+		string accout_name = "", accout_id = "", accout_sex = "", accout_college = "", accout_password = "";
 		bool Account_Message = false;		
 		while(fin2.getline(line2, sizeof(line2)))
 		{
 			stringstream word2(line2);
-			word2 >> accout_name;
-			word2 >> accout_sex;
-			word2 >> accout_id;
-			word2 >> accout_college;
-			word2 >> accout_password;
-//			cout<< s_name<<"-"<<accout_name << "-" <<s_id<<"-"<< accout_id << "-" << accout_sex << "-"<< accout_college <<endl;Sleep(500);
+			word2 >> accout_name >> accout_sex >> accout_id >> accout_college >> accout_password;
 			if(s_name == accout_name && s_id == accout_id){
 				Account_Message = true;
-				
 				break;
 			}
 		}
 		fin2.clear();
 		fin2.close();
- 
 		if(In_Message==true && (Account_Message == false)) {
 
 			flag = true;
@@ -638,44 +573,29 @@ void System :: Create_Student(void){
 }
 
 void System :: Create_Teacher_Fam(){
-	string r_name = "";
-	string r_id = ""; 
-	string r_sex = "";
-	string r_money = "0";
+	string r_name = "", r_id = "", r_sex = "", r_money = "0";
 	bool flag = false;
 	while(true)
 	{
 		system("cls");
 		fflush(stdin);
-	
 		string s_name; 
 		cout<<"请输入您的名字:"<<endl;
-		cin>>s_name;
-		
+		cin>>s_name;		
 		string s_id;
 		cout<<"请输入您的家属编号："<<endl;
-		cin>>s_id;		
-		
-		
+		cin>>s_id;						
 		ifstream fin("Teacher_Fam_Message.txt", std::ios::in);
 		char line[1024]={0};
-		string f_name = "";
-		string f_id = "";
-		string f_sex = "";
-
+		string f_name = "", f_sex = "", f_id = "";
 		bool In_Message=false;
 		while(fin.getline(line, sizeof(line))){
 			stringstream word(line);
-			word >> f_name;
-			word >> f_sex;
-			word >> f_id;
-
-//			cout<< f_name << " " << f_id <<endl;
+			word >> f_name >> f_sex >> f_id;
 			if(s_name == f_name && s_id == f_id){
 				r_id = s_id;
 				r_name = s_name;
 				r_sex = f_sex;
-
 				In_Message = true;
 				break;
 			}
@@ -685,26 +605,14 @@ void System :: Create_Teacher_Fam(){
 		
 		ifstream fin2("Teacher_Fam_Account_Message.txt", std::ios::in);
 		char line2[1024]={0};
-		string accout_name = "";
-		string accout_id = "";
-		string accout_sex = "";
-		string accout_money = "";
-		string account_times = "";
-		string accout_password = "";
+		string accout_name = "", accout_id = "", accout_sex = "", accout_money = "", account_times = "", accout_password = "";
 		bool Account_Message = false;		
 		while(fin2.getline(line2, sizeof(line2)))
 		{
 			stringstream word2(line2);
-			word2 >> accout_name;
-			word2 >> accout_sex;
-			word2 >> accout_id;
-			word2 >> accout_money;
-			word2 >> account_times;
-			word2 >> accout_password;
-//			cout<< s_name<<"-"<<accout_name << "-" <<s_id<<"-"<< accout_id << "-" << accout_sex << "-"<< accout_college <<endl;Sleep(500);
+			word2 >> accout_name >> accout_sex >> accout_id >> accout_money >> account_times >> accout_password;
 			if(s_name == accout_name && s_id == accout_id){
 				Account_Message = true;
-				
 				break;
 			}
 		}
@@ -712,7 +620,6 @@ void System :: Create_Teacher_Fam(){
 		fin2.close();
  
 		if(In_Message==true && (Account_Message == false)) {
-
 			flag = true;
 			break;
 		} else if(In_Message==false){
@@ -841,26 +748,14 @@ void System :: Delete_Teacher(){
 		
 		ifstream fin(Filename, std::ios::in);
 		char line[1024]={0};
-		string f_name = "";
-		string f_id = "";
-		string f_sex = "";
-		string f_college = "";
-		string f_password = "";
-		string f_times = ""; 
+		string f_name = "", f_id = "", f_sex = "", f_college = "", f_password = "", f_times = ""; 
 		bool In_Message=false;
 		int number = 0;
 		
 		while(fin.getline(line, sizeof(line))){
 			number++;
 			stringstream word(line);
-			word >> f_name;
-			word >> f_id;
-			word >> f_sex;
-			word >> f_college;
-			word >> f_password;
-			word >> f_times;
-//			cout<< f_name << " " << f_id <<endl;
-//			cout<< s_name << " " << s_id <<endl;
+			word >> f_name >> f_id >> f_sex >> f_college >> f_password >> f_times;
 			while(s_name == f_name && s_id == f_id){
 				system("cls");
 				fflush(stdin);
@@ -895,31 +790,15 @@ void System :: Delete_Student(){
 		string s_id;
 		cout<<"请输入您的学号："<<endl;
 		cin>>s_id;		
-		
 		ifstream fin(Filename, std::ios::in);
 		char line[1024]={0};
-		string f_name = "";
-		string f_id = "";
-		string f_sex = "";
-		string f_college = "";
-		string f_password = "";
-		string f_times = "";
-		string f_money = "";
+		string f_name = "", f_id = "", f_sex = "", f_college = "", f_password = "", f_times = "", f_money = "";
 		bool In_Message=false;
 		int number = 0;
-		
 		while(fin.getline(line, sizeof(line))){
 			number++;
 			stringstream word(line);
-			word >> f_name;
-			word >> f_sex;
-			word >> f_id;
-			word >> f_college;
-			word >> f_password;
-			word >> f_times;
-			word >> f_money;
-//			cout<< f_name << " " << f_id <<endl;
-//			cout<< s_name << " " << s_id <<endl;
+			word >> f_name >> f_sex >> f_id >> f_college >> f_password >> f_times >> f_money;
 			while(s_name == f_name && s_id == f_id){
 				system("cls");
 				fflush(stdin);
@@ -956,29 +835,16 @@ void System :: Delete_Teacher_Fam(){
 		string s_id;
 		cout<<"请输入您的家属编号："<<endl;
 		cin>>s_id;		
-		
 		ifstream fin(Filename, std::ios::in);
 		char line[1024]={0};
-		string f_name = "";
-		string f_id = "";
-		string f_sex = "";
-		string f_money = "";
-		string f_times = "";
-		string f_password = "";
+		string f_name = "", f_id = "", f_sex = "", f_money = "", f_times = "", f_password = "";
 		bool In_Message=false;
 		int number = 0;
 		
 		while(fin.getline(line, sizeof(line))){
 			number++;
 			stringstream word(line);
-			word >> f_name;
-			word >> f_sex;
-			word >> f_id;
-			word >> f_money;
-			word >> f_times;
-			word >> f_password;
-//			cout<< f_name << " " << f_id <<endl;
-//			cout<< s_name << " " << s_id <<endl;
+			word >> f_name >> f_sex >> f_id >> f_money >> f_times >> f_password;
 			while(s_name == f_name && s_id == f_id){
 				system("cls");
 				fflush(stdin);
@@ -1017,14 +883,10 @@ void System :: DelLineData(string fileName, int lineNum){
 	string strFileData = "";
 	int line = 1;
 	char lineData[1024] = {0};
-	while(in.getline(lineData, sizeof(lineData)))
-	{
-		if (line == lineNum)
-		{
+	while(in.getline(lineData, sizeof(lineData))){
+		if (line == lineNum){
 			strFileData += "";
-		}
-		else
-		{
+		}else{
 			strFileData += CharToStr(lineData);
 			strFileData += "\n";
 		}
@@ -1128,14 +990,10 @@ void System :: Get_On_Bus(Bus& bus1, Bus& bus2){
 			system("cls");
 			status_flag = 0;
 		}	
-		
 	}	
 }
 
 void System :: People_Get_On_Bus(Bus& bus1, Bus& bus2, int ch){ //老师信息验证 
-//	Bus bus1(51);
-//	int bus1_number = bus1.Get_count();
-//	Bus bus2(bus1_number);	
 	time_t timep;
 	struct tm *p;
 	time (&timep);
@@ -1209,10 +1067,6 @@ void System :: People_Get_On_Bus(Bus& bus1, Bus& bus2, int ch){ //老师信息验证
 		cout<<"按任意键重返回\n";
 		getch();	
 	}
-
-	
-//	cout <<  bus1_place << bus2_place;
-
 }
 void System :: Teacher_Get_On_Bus_Check(Bus& bus1, Bus& bus2){
 	string Filename = "Teacher_Account_Message.txt";
@@ -1232,26 +1086,14 @@ void System :: Teacher_Get_On_Bus_Check(Bus& bus1, Bus& bus2){
 		
 		ifstream fin(Filename, std::ios::in);
 		char line[1024]={0};
-		string f_name = "";
-		string f_id = "";
-		string f_sex = "";
-		string f_college = "";
-		string f_password = "";
-		string f_times = "";
+		string f_name = "", f_id = "", f_sex = "", f_college = "", f_password = "", f_times = "";
 		bool In_Message=false;
 		int number = 0;
 		
 		while(fin.getline(line, sizeof(line))){
 			number++;
 			stringstream word(line);
-			word >> f_name;
-			word >> f_id;
-			word >> f_sex;
-			word >> f_college;
-			word >> f_password;
-			word >> f_times;
-//			cout<< f_name << " " << f_id <<endl;
-//			cout<< s_name << " " << s_id <<endl;
+			word >> f_name >> f_id >> f_sex >> f_college >> f_password >> f_times;
 			while(s_name == f_name && s_id == f_id){
 				Teacher teacher(f_name, f_id, f_sex, f_college, f_password, f_times);
 				system("cls");
@@ -1300,26 +1142,14 @@ void System :: Student_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 		
 		ifstream fin(Filename, std::ios::in);
 		char line[1024]={0};
-		string f_name = "";
-		string f_sex = "";
-		string f_id = "";
-		string f_college = "";
-		string f_password = "";
-		string f_times = "";
-		string f_money = "";
+		string f_name = "", f_sex = "", f_id = "", f_college = "", f_password = "", f_times = "", f_money = "";
 		bool In_Message=false;
 		int number = 0;
 		
 		while(fin.getline(line, sizeof(line))){
 			number++;
 			stringstream word(line);
-			word >> f_name;
-			word >> f_sex;
-			word >> f_id;
-			word >> f_college;
-			word >> f_password;
-			word >> f_times;
-			word >> f_money;
+			word >> f_name >> f_sex >> f_id >> f_college >> f_password >> f_times >> f_money;
 			double check_money = atof(f_money.c_str());
 			if(s_name == f_name && s_id == f_id && check_money < 2.0){
 				cout<<"账户余额不足2.0元，请充值"<<endl;
@@ -1328,8 +1158,6 @@ void System :: Student_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 				In_Message = true;
 				break;
 			}
-//			cout<< f_name << " " << f_id <<endl;
-//			cout<< s_name << " " << s_id <<endl;
 			while(s_name == f_name && s_id == f_id){
 				Student student(f_name, f_sex, f_id, f_college, f_password, f_times, f_money);
 				system("cls");
@@ -1384,24 +1212,14 @@ void System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 		
 		ifstream fin(Filename, std::ios::in);
 		char line[1024]={0};
-		string f_name = "";
-		string f_sex = "";
-		string f_id = "";
-		string f_money = "";
-		string f_times = "";
-		string f_password = "";
+		string f_name = "", f_sex = "", f_id = "", f_money = "", f_times = "", f_password = "";
 		bool In_Message=false;
 		int number = 0;
 		
 		while(fin.getline(line, sizeof(line))){
 			number++;
 			stringstream word(line);
-			word >> f_name;
-			word >> f_sex;
-			word >> f_id;
-			word >> f_money;
-			word >> f_times;
-			word >> f_password;
+			word >> f_name >> f_sex >> f_id >> f_money >> f_times >> f_password;
 			double check_money = atof(f_money.c_str());
 			if(s_name == f_name && s_id == f_id && check_money < 2.0){
 				cout<<"账户余额不足2.0元，请充值"<<endl;
@@ -1410,8 +1228,6 @@ void System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 				In_Message = true;
 				break;
 			}
-//			cout<< f_name << " " << f_id <<endl;
-//			cout<< s_name << " " << s_id <<endl;
 			while(s_name == f_name && s_id == f_id){
 				Teacher_Fam teacher_fam(f_name, f_sex, f_id, f_money, f_times, f_password);
 				system("cls");
@@ -1507,10 +1323,6 @@ void System :: Deposit(){
 		
 	}	
 }
-//
-//void System :: People_Deposit(int ch){
-//	
-//}
 
 void System :: Student_Deposit(void){
 	string Filename = "Student_Account_Message.txt";
@@ -1526,26 +1338,14 @@ void System :: Student_Deposit(void){
 		
 		ifstream fin(Filename, std::ios::in);
 		char line[1024]={0};
-		string f_name = "";
-		string f_sex = "";
-		string f_id = "";
-		string f_college = "";
-		string f_password = "";
-		string f_times = "";
-		string f_money = "";
+		string f_name = "", f_sex = "", f_id = "", f_college = "", f_password = "", f_times = "", f_money = "";
 		bool In_Message=false;
 		int number = 0;
 		
 		while(fin.getline(line, sizeof(line))){
 			number++;
 			stringstream word(line);
-			word >> f_name;
-			word >> f_sex;
-			word >> f_id;
-			word >> f_college;
-			word >> f_password;
-			word >> f_times;
-			word >> f_money;
+			word >> f_name >> f_sex >> f_id >> f_college >> f_password >> f_times >> f_money;
 			double check_money = atof(f_money.c_str());
 			while(s_name == f_name && s_id == f_id){
 				cout<<"请输入您需要充值的金额："<<endl;
@@ -1595,24 +1395,14 @@ void System :: Teacher_Fam_Deposit(void){
 		
 		ifstream fin(Filename, std::ios::in);
 		char line[1024]={0};
-		string f_name = "";
-		string f_sex = "";
-		string f_id = "";
-		string f_money = "";
-		string f_times = "";
-		string f_password = "";
+		string f_name = "", f_sex = "", f_id = "", f_money = "", f_times = "", f_password = "";
 		bool In_Message=false;
 		int number = 0;
 		
 		while(fin.getline(line, sizeof(line))){
 			number++;
 			stringstream word(line);
-			word >> f_name;
-			word >> f_sex;
-			word >> f_id;
-			word >> f_money;
-			word >> f_times;
-			word >> f_password;
+			word >> f_name >> f_sex >> f_id >> f_money >> f_times >> f_password;
 			double check_money = atof(f_money.c_str());
 			while(s_name == f_name && s_id == f_id){
 				cout<<"请输入您需要充值的金额："<<endl;
