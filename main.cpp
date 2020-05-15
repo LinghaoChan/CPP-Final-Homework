@@ -30,6 +30,8 @@ public:
 	string Student_Times_Plus(void);
 	string Stuent_Money_Decrease(void); 
 	string Student_Deposit(double);
+	void Show_Status(void);
+	static void Student_Clear_Times(void);
 }; 
 
 Student :: Student(string i_name, string i_sex, string i_id, string i_college, string i_password, string i_times, string i_money){
@@ -61,6 +63,36 @@ string Student :: Student_Deposit(double deposit){
 	return to_string(money);
 }
 
+void Student :: Show_Status(void){
+	cout<<"\n|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  - * |\n";
+	cout<<"| *                                                                                             * |\n";
+	cout<<"| |  姓名："<<name<<"\t\t工号："<<id<<"\t\t账户余额："<<money<<"\t\t次数："<<times<<"  | |\n";
+	cout<<"| *                                                                                             * |\n";
+	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  |\n\n\n";
+}
+
+void Student :: Student_Clear_Times(){					
+	string Filename = "Student_Account_Message.txt";		
+	ifstream fin(Filename, std::ios::in);
+	char line[1024]={0};
+	string f_name = "", f_id = "", f_sex = "", f_college = "", f_password = "", f_times = "", f_money = "";
+	string Filedata = "";
+	while(fin.getline(line, sizeof(line))){
+		stringstream word(line);
+		word >> f_name >> f_sex >> f_id >> f_college >> f_password >> f_times >> f_money;
+		string new_string = f_name+" "+f_sex+" "+f_id+" "+f_college+" "+f_password+" "+"0"+" "+f_money;
+		Filedata+=new_string+"\n";
+	}
+	fin.clear();
+	fin.close();
+	
+	ofstream out;
+	out.open(Filename);
+	out.flush();
+	out << 	Filedata;
+	out.close();
+}
+
 class Teacher : public People {
 private:
 	string college;	
@@ -70,8 +102,31 @@ public:
 	Teacher(string i_name,string i_id, string i_sex, string i_college, string i_password, string i_times);
 	~Teacher(); 
 	string Teacher_Times_Plus();
+	void Show_Status(void);
+	static void Teacher_Claer_Times(void);
 };
 
+void Teacher :: Teacher_Claer_Times(){
+	string Filename = "Teacher_Account_Message.txt";		
+	ifstream fin(Filename, std::ios::in);
+	char line[1024]={0};
+	string f_name = "", f_id = "", f_sex = "", f_college = "", f_password = "", f_times = "";
+	string Filedata = "";
+	while(fin.getline(line, sizeof(line))){
+		stringstream word(line);
+		word >> f_name >> f_id >> f_sex >> f_college >> f_password >> f_times;
+		string new_string = f_name+" "+f_id+" "+f_sex+" "+f_college+" "+f_password+" "+"0";
+		Filedata+=new_string+"\n";
+	}
+	fin.clear();
+	fin.close();
+	
+	ofstream out;
+	out.open(Filename);
+	out.flush();
+	out << 	Filedata;
+	out.close();
+}
 Teacher :: Teacher(string i_name,string i_id, string i_sex, string i_college, string i_password, string i_times){
 	name = i_name;
 	id = i_id;
@@ -90,6 +145,14 @@ string Teacher :: Teacher_Times_Plus() {
 	return to_string(times);;
 }
 
+void Teacher :: Show_Status(void){
+	cout<<"\n|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  - * |\n";
+	cout<<"| *                                                                                             * |\n";
+	cout<<"| |  姓名："<<name<<"\t\t工号："<<id<<"\t\t账户余额："<<"免费乘车"<<"\t\t次数："<<times<<" | |\n";
+	cout<<"| *                                                                                             * |\n";
+	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  |\n\n\n";
+}
+
 class Teacher_Fam : public People {
 private:
 	int times;
@@ -102,6 +165,8 @@ public:
 	string Teacher_Fam_Money_Decrease(void); 
 	int Get_Times(void);
 	string Teacher_Fam_Deposit(double);
+	void Show_Status(void);
+	static void Teacher_Fam_Claer_Times(void);
 };
 
 Teacher_Fam :: Teacher_Fam(string i_name, string i_sex, string i_id, string i_money, string i_times, string i_password){
@@ -114,7 +179,25 @@ Teacher_Fam :: Teacher_Fam(string i_name, string i_sex, string i_id, string i_mo
 }
 
 Teacher_Fam :: ~Teacher_Fam(){
+	string Filename = "Teacher_Fam_Account_Message.txt";		
+	ifstream fin(Filename, std::ios::in);
+	char line[1024]={0};
+	string f_name = "", f_sex = "", f_id = "", f_money = "", f_times = "", f_password = "";
+	string Filedata = "";
+	while(fin.getline(line, sizeof(line))){
+		stringstream word(line);
+		word >> f_name >> f_sex >> f_id >> f_money >> f_times >> f_password;
+		string new_string = f_name+" "+f_sex+" "+f_id+" "+f_money+" "+"0"+" "+f_password;
+		Filedata+=new_string+"\n";
+	}
+	fin.clear();
+	fin.close();
 	
+	ofstream out;
+	out.open(Filename);
+	out.flush();
+	out << 	Filedata;
+	out.close();
 }
 
 string Teacher_Fam :: Teacher_Fam_Times_Plus(){
@@ -135,6 +218,19 @@ string Teacher_Fam :: Teacher_Fam_Deposit(double deposit_money){
 	money += deposit_money;
 	return to_string(money);
 }
+
+void Teacher_Fam :: Show_Status(void){
+	cout<<"\n|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  - * |\n";
+	cout<<"| *                                                                                             * |\n";
+	cout<<"| |   姓名："<<name<<"\t\t工号："<<id<<"\t\t账户余额："<< money <<"\t\t次数："<<times<< "        | |\n";
+	cout<<"| *                                                                                             * |\n";
+	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  |\n\n\n";
+}
+
+void Teacher_Fam :: Teacher_Fam_Claer_Times(){
+	
+}
+
 
 class Bus{
 private:
@@ -245,7 +341,7 @@ void Bus :: Get_On_One_Person(){
 }
 
 class System{
-	int MONTH = 5; 
+	static int MONTH; 
 	bool (System :: *Function_Get_On_Bus_pointer[3])(Bus&, Bus&) = {&System :: Teacher_Get_On_Bus_Check, &System :: Student_Get_On_Bus_Check, &System :: Teacher_Fam_Get_On_Bus_Check};
 	void (System :: *People_Deposit_pointer[2])(void) = {&System :: Student_Deposit, &System :: Teacher_Fam_Deposit};
 public:
@@ -274,9 +370,11 @@ public:
 	void ModifyLineData(char* fileName, int lineNum, char* lineData);
 	string CharToStr(char* contentChar);
 	string get_password(void);
+	static void Check_Month(void);
 
 };
 
+int System :: MONTH = 5;
 
 void System :: System_open(void){
 	cout<<"\n\n\n\n\n\n\t\t\t\t\t";
@@ -1106,6 +1204,7 @@ bool System :: Teacher_Get_On_Bus_Check(Bus& bus1, Bus& bus2){
 				cout<<"请输入您的密码:"<<endl;
 				string tmp_password = get_password();
 				if(f_password == tmp_password){
+					teacher.Show_Status();
 					f_times = teacher.Teacher_Times_Plus();
 					DelLineData(Filename, number);
 					ofstream outfile;
@@ -1177,6 +1276,7 @@ bool System :: Student_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 				cout<<"请输入您的密码:"<<endl;
 				string tmp_password = get_password();
 				if(f_password == tmp_password){
+					student.Show_Status(); 
 					f_times = student.Student_Times_Plus();
 					f_money = student.Stuent_Money_Decrease();
 					DelLineData(Filename, number);
@@ -1260,6 +1360,7 @@ bool System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 					if(teacher_fam.Get_Times()<=20){
 						flag = true;
 						f_times = teacher_fam.Teacher_Fam_Times_Plus();
+						teacher_fam.Show_Status();
 						DelLineData(Filename, number);
 						ofstream outfile;
 						outfile.open(Filename, ios::app); 
@@ -1269,6 +1370,7 @@ bool System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 						break;
 					} else{
 						flag = true;
+						teacher_fam.Show_Status();
 						f_times = teacher_fam.Teacher_Fam_Times_Plus();
 						f_money = teacher_fam.Teacher_Fam_Money_Decrease();
 						DelLineData(Filename, number);
@@ -1277,7 +1379,7 @@ bool System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 						outfile << f_name << " " << f_sex << " " << f_id << " " << f_money <<" " << f_times << " " << f_password  <<endl; 
 						outfile.close(); 
 						if(check_money<7.0 && flag){
-							cout<<"\07【提示】：当前账户余额不足5.0元，请尽快充值"<<endl;
+							cout<<"\07【提示】：当前账户余额将不足5.0元，请尽快充值"<<endl;
 						}
 						In_Message = true;
 						break;
@@ -1493,11 +1595,26 @@ void System :: Teacher_Fam_Deposit(){
 	if(sign == true){
 		cout<<"您不在当前账户中，按任意键返回"<<endl;
 		getch();
+	}	
+}
+
+void System :: Check_Month(){
+	time_t timep;
+	struct tm *p;
+	time (&timep);
+	p=gmtime(&timep);
+	int month = p->tm_mon + 1;
+	cout<<month;
+	if(month != MONTH){
+		MONTH = month;
+		Student :: Student_Clear_Times();
+		Teacher :: Teacher_Claer_Times();
+		Teacher_Fam :: Teacher_Fam_Claer_Times();
 	}
-	
 }
 
 int main(){
+	System :: Check_Month();
 	System s;
 	s.System_open();
 	
