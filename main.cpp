@@ -182,9 +182,9 @@ Bus :: Bus(int un_permit){
 			time(&nowtime);
 			p = localtime(&nowtime);
 			int system_time = p->tm_min;
-			if(system_time>=0.0 && system_time < 1.0){
+			if(system_time>=0.0 && system_time < 10.0){
 				place = system_time/10.0;
-			} else if(system_time>=1.0 && system_time<20.0){
+			} else if(system_time>=10.0 && system_time<20.0){
 				place = 1.0;
 			} else if (system_time>=20.0 && system_time <35.0){
 				place = 1.0 + (system_time-20.0)/15.0;
@@ -246,7 +246,7 @@ void Bus :: Get_On_One_Person(){
 
 class System{
 	int MONTH = 5; 
-	void (System :: *Function_Get_On_Bus_pointer[3])(Bus&, Bus&) = {&System :: Teacher_Get_On_Bus_Check, &System :: Student_Get_On_Bus_Check, &System :: Teacher_Fam_Get_On_Bus_Check};
+	bool (System :: *Function_Get_On_Bus_pointer[3])(Bus&, Bus&) = {&System :: Teacher_Get_On_Bus_Check, &System :: Student_Get_On_Bus_Check, &System :: Teacher_Fam_Get_On_Bus_Check};
 	void (System :: *People_Deposit_pointer[2])(void) = {&System :: Student_Deposit, &System :: Teacher_Fam_Deposit};
 public:
 	void System_open(void);
@@ -266,9 +266,9 @@ public:
 	void Get_On_Bus(Bus&, Bus&);	
 	void People_Get_On_Bus(Bus&, Bus&, int);
 	void Deposit(void);
-	void Teacher_Get_On_Bus_Check(Bus&, Bus&);
-	void Student_Get_On_Bus_Check(Bus&, Bus&);
-	void Teacher_Fam_Get_On_Bus_Check(Bus&, Bus&);
+	bool Teacher_Get_On_Bus_Check(Bus&, Bus&);
+	bool Student_Get_On_Bus_Check(Bus&, Bus&);
+	bool Teacher_Fam_Get_On_Bus_Check(Bus&, Bus&);
 	void Student_Deposit(void);
 	void Teacher_Fam_Deposit(void);
 	void ModifyLineData(char* fileName, int lineNum, char* lineData);
@@ -1002,7 +1002,7 @@ void System :: People_Get_On_Bus(Bus& bus1, Bus& bus2, int ch){ //老师信息验证
 	time (&timep);
 	p=gmtime(&timep);
 	int sec_time = p->tm_sec + (p->tm_min) * 60 + (8+p->tm_hour) * 60 * 60;
-	if(sec_time<28800 || sec_time>=64800){
+	if(sec_time<28800 || sec_time>=100000){										//64800 
 		cout<<"当日车辆已停运"<<endl;
 		cout<<"早上8点为第一班车，晚上18点为最后一班车"<<endl;
 		cout<<"按任意键重返回\n";
@@ -1039,19 +1039,21 @@ void System :: People_Get_On_Bus(Bus& bus1, Bus& bus2, int ch){ //老师信息验证
 			bool status1 = bus1.Get_Status(), status2 = bus2.Get_Status();
 			if(status1&&status2){
 //				Teacher_Get_On_Bus_Check();
-				(this->*Function_Get_On_Bus_pointer[ch])(bus1, bus2);
-				cout<<"\n车辆均未满员，请上车"<<endl;						//检查是否有钱上车 
-				cout<<"请选择车辆:"<<endl;
-				cout<<"[1]车辆一  [2]车辆二  请选择(1-2)："<<endl;
-				char choice = getch();
-				while(choice!='1'&&choice!='2'){
-					choice = getch();		
+				if((this->*Function_Get_On_Bus_pointer[ch])(bus1, bus2)){
+					cout<<"\n车辆均未满员，请上车"<<endl;						//检查是否有钱上车 
+					cout<<"请选择车辆:"<<endl;
+					cout<<"[1]车辆一  [2]车辆二  请选择(1-2)："<<endl;
+					char choice = getch();
+					while(choice!='1'&&choice!='2'){
+						choice = getch();		
+					}
+					if(choice == '1'){
+						bus1.Get_On_One_Person();
+					} else{
+						bus2.Get_On_One_Person();
+					}
 				}
-				if(choice == '1'){
-					bus1.Get_On_One_Person();
-				} else{
-					bus2.Get_On_One_Person();
-				}
+
 			} else if(status1 && (!status2)){
 				(this->*Function_Get_On_Bus_pointer[ch])(bus1, bus2);
 				cout<<"车辆二已满员，请上第一辆车";
@@ -1071,7 +1073,7 @@ void System :: People_Get_On_Bus(Bus& bus1, Bus& bus2, int ch){ //老师信息验证
 		getch();	
 	}
 }
-void System :: Teacher_Get_On_Bus_Check(Bus& bus1, Bus& bus2){
+bool System :: Teacher_Get_On_Bus_Check(Bus& bus1, Bus& bus2){
 	string Filename = "Teacher_Account_Message.txt";
 	while(true){
 		system("cls");
@@ -1111,7 +1113,6 @@ void System :: Teacher_Get_On_Bus_Check(Bus& bus1, Bus& bus2){
 					outfile << f_name << " " << f_id << " " << f_sex << " " << f_college << " " << f_password <<" " << f_times << endl; 
 					outfile.close(); 
 					In_Message = true;
-					teacher.~Teacher();
 					break;
 				}
 			}
@@ -1123,11 +1124,17 @@ void System :: Teacher_Get_On_Bus_Check(Bus& bus1, Bus& bus2){
 		fin.close();
 		if(In_Message == true){
 			break;
+		} else{
+			cout<<"用户信息错误,按任意键继续"<<endl;
+			getch();
 		}
 	}
+	return true;
 } 
 
-void System :: Student_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
+bool System :: Student_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
+	bool target = true;
+	bool target2 = true;
 	string Filename = "Student_Account_Message.txt";
 	while(true){
 		system("cls");
@@ -1155,10 +1162,12 @@ void System :: Student_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 			word >> f_name >> f_sex >> f_id >> f_college >> f_password >> f_times >> f_money;
 			double check_money = atof(f_money.c_str());
 			if(s_name == f_name && s_id == f_id && check_money < 2.0){
+				target = false;
 				cout<<"账户余额不足2.0元，请充值"<<endl;
 				cout<<"按任意键返回"<<endl;
 				getch(); 
 				In_Message = true;
+				target2 = false;
 				break;
 			}
 			while(s_name == f_name && s_id == f_id){
@@ -1181,7 +1190,6 @@ void System :: Student_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 						getch();
 					}
 					In_Message = true;
-					student.~Student();
 					break;
 				}
 			}
@@ -1193,11 +1201,19 @@ void System :: Student_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 		fin.close();
 		if(In_Message == true){
 			break;
+		} else{
+			if(target2 == true){
+				cout<<"用户信息错误,按任意键继续"<<endl;
+				getch();
+			}
 		}
 	}	
+	return target;
 }
 
-void System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
+bool System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
+	bool target = true;
+	bool target2 = true;
 	string Filename = "Teacher_Fam_Account_Message.txt";
 	while(true){
 		system("cls");
@@ -1225,10 +1241,12 @@ void System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 			word >> f_name >> f_sex >> f_id >> f_money >> f_times >> f_password;
 			double check_money = atof(f_money.c_str());
 			if(s_name == f_name && s_id == f_id && check_money < 2.0){
+				target = false;
 				cout<<"账户余额不足2.0元，请充值"<<endl;
 				cout<<"按任意键返回"<<endl;
 				getch(); 
 				In_Message = true;
+				target2 = false;
 				break;
 			}
 			while(s_name == f_name && s_id == f_id){
@@ -1248,9 +1266,9 @@ void System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 						outfile << f_name << " " << f_sex << " " << f_id << " " << f_money <<" " << f_times << " " << f_password  <<endl; 
 						outfile.close();
 						In_Message = true;
-						teacher_fam.~Teacher_Fam();
 						break;
 					} else{
+						flag = true;
 						f_times = teacher_fam.Teacher_Fam_Times_Plus();
 						f_money = teacher_fam.Teacher_Fam_Money_Decrease();
 						DelLineData(Filename, number);
@@ -1259,12 +1277,9 @@ void System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 						outfile << f_name << " " << f_sex << " " << f_id << " " << f_money <<" " << f_times << " " << f_password  <<endl; 
 						outfile.close(); 
 						if(check_money<7.0 && flag){
-							cout<<"当前账户余额不足5.0元，请尽快充值"<<endl;
-							cout<<"按任意键返回";
-							getch();
+							cout<<"\07【提示】：当前账户余额不足5.0元，请尽快充值"<<endl;
 						}
 						In_Message = true;
-						teacher_fam.~Teacher_Fam();
 						break;
 					}
 
@@ -1278,8 +1293,14 @@ void System :: Teacher_Fam_Get_On_Bus_Check(Bus& bus1, Bus& bus2)	{
 		fin.close();
 		if(In_Message == true){
 			break;
+		} else{
+			if(target2 == true){
+			cout<<"用户信息错误,按任意键继续"<<endl;
+			getch();
+			}
 		}
-	}
+	} 
+	return target;
 }
 
 void System :: Deposit(){
