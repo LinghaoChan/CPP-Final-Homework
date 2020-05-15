@@ -16,7 +16,14 @@ public:
 	string name;
 	string sex;
 	string id;
+	People(string, string, string) ;
 };
+
+People :: People (string i_name, string i_sex, string i_id){
+	this->name = i_name;
+	this->sex = i_sex;
+	this->id = i_id;
+}
 
 class Student : public People {
 private:
@@ -34,14 +41,11 @@ public:
 	static void Student_Clear_Times(void);
 }; 
 
-Student :: Student(string i_name, string i_sex, string i_id, string i_college, string i_password, string i_times, string i_money){
-	name = i_name;
-	sex = i_sex;
-	id = i_id;
-	college = i_college;
-	password = i_password;
-	times = atoi(i_times.c_str()); 
-	money = atof(i_money.c_str());
+Student :: Student(string i_name, string i_sex, string i_id, string i_college, string i_password, string i_times, string i_money):People(i_name, i_sex, i_id){
+	this->college = i_college;
+	this->password = i_password;
+	this->times = atoi(i_times.c_str()); 
+	this->money = atof(i_money.c_str());
 }
 
 Student :: ~Student(){
@@ -49,24 +53,24 @@ Student :: ~Student(){
 }
 
 string Student :: Student_Times_Plus(){
-	times++;
+	this->times++;
 	return to_string(times);
 }
 
 string Student :: Stuent_Money_Decrease(){
-	money = money - 2.0;
+	this->money -= 2.0;
 	return to_string(money);
 }
 
 string Student :: Student_Deposit(double deposit){
-	money += deposit;
+	this->money += deposit;
 	return to_string(money);
 }
 
 void Student :: Show_Status(void){
 	cout<<"\n|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  - * |\n";
 	cout<<"| *                                                                                             * |\n";
-	cout<<"| |  姓名："<<name<<"\t\t工号："<<id<<"\t\t账户余额："<<money<<"\t\t次数："<<times<<"  | |\n";
+	cout<<"| |  姓名："<<this->name<<"\t\t工号："<<this->id<<"\t\t账户余额："<<this->money<<"\t\t次数："<<this->times<<"  | |\n";
 	cout<<"| *                                                                                             * |\n";
 	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  |\n\n\n";
 }
@@ -127,13 +131,10 @@ void Teacher :: Teacher_Claer_Times(){
 	out << 	Filedata;
 	out.close();
 }
-Teacher :: Teacher(string i_name,string i_id, string i_sex, string i_college, string i_password, string i_times){
-	name = i_name;
-	id = i_id;
-	sex = i_sex;
-	college = i_college;
-	password = i_password;
-	times = atoi(i_times.c_str()); 
+Teacher :: Teacher(string i_name,string i_id, string i_sex, string i_college, string i_password, string i_times):People(i_name, i_id, i_sex){
+	this->college = i_college;
+	this->password = i_password;
+	this->times = atoi(i_times.c_str()); 
 }
 
 Teacher :: ~Teacher(){
@@ -141,14 +142,14 @@ Teacher :: ~Teacher(){
 }
 
 string Teacher :: Teacher_Times_Plus() {
-	times++;
+	this->times++;
 	return to_string(times);;
 }
 
 void Teacher :: Show_Status(void){
 	cout<<"\n|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  - * |\n";
 	cout<<"| *                                                                                             * |\n";
-	cout<<"| |  姓名："<<name<<"\t\t工号："<<id<<"\t\t账户余额："<<"免费乘车"<<"\t\t次数："<<times<<" | |\n";
+	cout<<"| |  姓名："<<this->name<<"\t\t工号："<<this->id<<"\t\t账户余额："<<"免费乘车"<<"\t\t次数："<<this->times<<" | |\n";
 	cout<<"| *                                                                                             * |\n";
 	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  |\n\n\n";
 }
@@ -169,13 +170,10 @@ public:
 	static void Teacher_Fam_Claer_Times(void);
 };
 
-Teacher_Fam :: Teacher_Fam(string i_name, string i_sex, string i_id, string i_money, string i_times, string i_password){
-	name = i_name;
-	sex = i_sex;
-	id = i_id;
-	money = atof(i_money.c_str());
-	times = atoi(i_times.c_str());
-	password = i_password;
+Teacher_Fam :: Teacher_Fam(string i_name, string i_sex, string i_id, string i_money, string i_times, string i_password):People(i_name, i_sex, i_id){
+	this->money = atof(i_money.c_str());
+	this->times = atoi(i_times.c_str());
+	this->password = i_password;
 }
 
 Teacher_Fam :: ~Teacher_Fam(){
@@ -201,12 +199,12 @@ Teacher_Fam :: ~Teacher_Fam(){
 }
 
 string Teacher_Fam :: Teacher_Fam_Times_Plus(){
-	times++;
+	this->times++;
 	return to_string(times); 
 }
 
 string Teacher_Fam :: Teacher_Fam_Money_Decrease(){
-	money = money - 2.0;
+	this->money -= 2.0;
 	return to_string(money);
 }
 
@@ -215,14 +213,14 @@ int Teacher_Fam :: Get_Times(){
 }
 
 string Teacher_Fam :: Teacher_Fam_Deposit(double deposit_money){
-	money += deposit_money;
+	this->money += deposit_money;
 	return to_string(money);
 }
 
 void Teacher_Fam :: Show_Status(void){
 	cout<<"\n|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  - * |\n";
 	cout<<"| *                                                                                             * |\n";
-	cout<<"| |   姓名："<<name<<"\t\t工号："<<id<<"\t\t账户余额："<< money <<"\t\t次数："<<times<< "        | |\n";
+	cout<<"| |   姓名："<<this->name<<"\t\t工号："<<this->id<<"\t\t账户余额："<< this->money <<"\t\t次数："<<this->times<< "        | |\n";
 	cout<<"| *                                                                                             * |\n";
 	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  |\n\n\n";
 }
@@ -268,26 +266,26 @@ Bus :: Bus(int un_permit){
 		if(choice == number){
 			word >> f_id >> f_name >> f_brand >> f_size;	
 			id = f_id;
-			driver = f_name;
-			brand = f_brand;
-			size = atoi(f_size.c_str());
-			count = number;
-			number_of_passengers = rand()%size+1;
+			this->driver = f_name;
+			this->brand = f_brand;
+			this->size = atoi(f_size.c_str());
+			this->count = number;
+			this->number_of_passengers = rand()%size+1;
 			time_t nowtime;
 			struct tm* p;;
 			time(&nowtime);
 			p = localtime(&nowtime);
 			int system_time = p->tm_min;
 			if(system_time>=0.0 && system_time < 10.0){
-				place = system_time/10.0;
+				this->place = system_time/10.0;
 			} else if(system_time>=10.0 && system_time<20.0){
-				place = 1.0;
+				this->place = 1.0;
 			} else if (system_time>=20.0 && system_time <35.0){
-				place = 1.0 + (system_time-20.0)/15.0;
+				this->place = 1.0 + (system_time-20.0)/15.0;
 			} else if (system_time>=35.0 && system_time<45.0){
-				place = 2.0;
+				this->place = 2.0;
 			} else{
-				place = 2.0 + (system_time-45.0)/15.0;
+				this->place = 2.0 + (system_time-45.0)/15.0;
 			}
 //			cout<<id<<driver<<brand<<size<<endl;
 			break;
@@ -298,20 +296,20 @@ Bus :: Bus(int un_permit){
 }
 
 string Bus :: Get_Bus_Id(){
-	return id;
+	return this->id;
 }
 
 int Bus :: Get_count(){
-	return count;
+	return this->count;
 }
 
 int Bus :: Get_number_of_passengers(){
-	return number_of_passengers;
+	return this->number_of_passengers;
 }
 
 void Bus :: Show_Status(){
 	string status;
-	if(number_of_passengers<size){
+	if(this->number_of_passengers<this->size){
 		status = "未满"; 
 	}
 	else{
@@ -319,13 +317,13 @@ void Bus :: Show_Status(){
 	}
 	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  - * |\n";
 	cout<<"| *                                                                                             * |\n";
-	cout<<"| |   车型："<<brand<<"\t\t车牌："<<id<<"\t\t车上人数："<<number_of_passengers<<"\t\t状态："<<status<<"      | |\n";
+	cout<<"| |   车型："<<this->brand<<"\t\t车牌："<<this->id<<"\t\t车上人数："<<this->number_of_passengers<<"\t\t状态："<<status<<"      | |\n";
 	cout<<"| *                                                                                             * |\n";
 	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  |\n\n\n";
 }
 
 bool Bus :: Get_Status(){
-	if(number_of_passengers<size){
+	if(this->number_of_passengers<size){
 		return true; 
 	}else{
 		return false;
@@ -333,11 +331,11 @@ bool Bus :: Get_Status(){
 }
 
 double Bus :: Get_place(){
-	return place;
+	return this->place;
 }
 
 void Bus :: Get_On_One_Person(){
-	number_of_passengers++;
+	this->number_of_passengers++;
 }
 
 class System{
