@@ -271,6 +271,7 @@ public:
 	void Teacher_Fam_Get_On_Bus_Check(Bus&, Bus&);
 	void Student_Deposit(void);
 	void Teacher_Fam_Deposit(void);
+	void ModifyLineData(char* fileName, int lineNum, char* lineData);
 	string CharToStr(char* contentChar);
 	string get_password(void);
 
@@ -402,7 +403,7 @@ void System :: Create_Teacher(void){
 		cout<<"请输入您的名字:"<<endl;
 		cin>>s_name;
 		string s_id;
-		cout<<"请输入您的工号"<<endl;
+		cout<<"请输入您的工号："<<endl;
 		cin>>s_id;		
 		ifstream fin("Teacher_Message.txt", std::ios::in);
 		char line[1024]={0};
@@ -443,11 +444,11 @@ void System :: Create_Teacher(void){
 			flag = true;
 			break;
 		} else if(In_Message==false){
-			cout<<"账户信息不匹配！请重新注册！\n";
+			cout<<"\07账户信息不匹配！请重新注册！\n";
 			cout<<"按任意键重新注册\n\n";
 			getch();				
 		} else{
-			cout<<"该ID已被注册！请重新注册！\n";
+			cout<<"\07该ID已被注册！请重新注册！\n";
 			cout<<"按任意键重新注册\n\n";
 			getch();
 		}
@@ -474,7 +475,7 @@ void System :: Create_Teacher(void){
 		    Sleep(500);
 			break;					
 		} else{
-			cout<<"两次输入密码不一致，请重新输入";
+			cout<<"\07两次输入密码不一致，请重新输入";
 			cout<<"按任意键重新验证密码\n\n";
 			getch();
 		} 
@@ -493,7 +494,7 @@ void System :: Create_Student(void){
 		cout<<"请输入您的名字:"<<endl;
 		cin>>s_name;
 		string s_id;
-		cout<<"请输入您的学号"<<endl;
+		cout<<"请输入您的学号:"<<endl;
 		cin>>s_id;		
 		ifstream fin("Student_Message.txt", std::ios::in);
 		char line[1024]={0};
@@ -534,11 +535,11 @@ void System :: Create_Student(void){
 			flag = true;
 			break;
 		} else if(In_Message==false){
-			cout<<"账户信息不匹配！请重新注册！\n";
+			cout<<"\07账户信息不匹配！请重新注册！\n";
 			cout<<"按任意键重新注册\n\n";
 			getch();				
 		} else{
-			cout<<"该ID已被注册！请重新注册！\n";
+			cout<<"\07该ID已被注册！请重新注册！\n";
 			cout<<"按任意键重新注册\n\n";
 			getch();
 		}
@@ -565,7 +566,7 @@ void System :: Create_Student(void){
 		    Sleep(500);
 			break;					
 		} else{
-			cout<<"两次输入密码不一致，请重新输入";
+			cout<<"\07两次输入密码不一致，请重新输入";
 			cout<<"按任意键重新验证密码\n";
 			getch();
 		} 
@@ -623,11 +624,11 @@ void System :: Create_Teacher_Fam(){
 			flag = true;
 			break;
 		} else if(In_Message==false){
-			cout<<"账户信息不匹配！请重新注册！\n";
+			cout<<"\07账户信息不匹配！请重新注册！\n";
 			cout<<"按任意键重新注册\n\n";
 			getch();				
 		} else{
-			cout<<"该ID已被注册！请重新注册！\n";
+			cout<<"\07该ID已被注册！请重新注册！\n";
 			cout<<"按任意键重新注册\n\n";
 			getch();
 		}
@@ -654,7 +655,7 @@ void System :: Create_Teacher_Fam(){
 		    Sleep(500);
 			break;					
 		} else{
-			cout<<"两次输入密码不一致，请重新输入";
+			cout<<"\07两次输入密码不一致，请重新输入";
 			cout<<"按任意键重新验证密码\n";
 			getch();
 		} 
@@ -688,7 +689,7 @@ string System :: get_password(){
 void System :: Delete_Account_menu(){
 	int status_flag = 1; 
 	while (status_flag){
-		cout<<"跳转中";
+		cout<<"\n跳转中";
 		cout<<"..";Sleep(100);		
 		cout<<"..";Sleep(100);
 		cout<<"..";Sleep(100); 
@@ -763,9 +764,9 @@ void System :: Delete_Teacher(){
 				string tmp_password = get_password();
 				if(f_password == tmp_password){
 					DelLineData(Filename, number);
+					In_Message = true;
 					break;
 				}
-				In_Message = true;
 			}
 			if(In_Message == true){
 				break;
@@ -774,6 +775,7 @@ void System :: Delete_Teacher(){
 		fin.clear();
 		fin.close();
 		if(In_Message == true){
+			cout<<"\07\n用户注销成功！"<<endl; 
 			break;
 		}
 	}
@@ -806,9 +808,9 @@ void System :: Delete_Student(){
 				string tmp_password = get_password();
 				if(f_password == tmp_password){
 					DelLineData(Filename, number);
+					In_Message = true;
 					break;
 				}
-				In_Message = true;
 			}
 			if(In_Message == true){
 				break;
@@ -817,7 +819,7 @@ void System :: Delete_Student(){
 		fin.clear();
 		fin.close();
 		if(In_Message == true){
-			cout<<"\07用户创建成功！"<<endl; 
+			cout<<"\07\n用户注销成功！"<<endl; 
 		    Sleep(500);
 			break;
 		}
@@ -852,11 +854,12 @@ void System :: Delete_Teacher_Fam(){
 				string tmp_password = get_password();
 				if(f_password == tmp_password){
 					DelLineData(Filename, number);
+					In_Message = true;
 					break;
 				}
-				In_Message = true;
 			}
 			if(In_Message == true){
+				cout<<"\07\n用户注销成功！"<<endl; 
 				break;
 			}
 		}
@@ -1324,9 +1327,42 @@ void System :: Deposit(){
 	}	
 }
 
-void System :: Student_Deposit(void){
+void System :: ModifyLineData(char* fileName, int lineNum, char* lineData)
+{
+	ifstream in;
+	in.open(fileName);
+ 
+	string strFileData = "";
+	int line = 1;
+	char tmpLineData[1024] = {0};
+	while(in.getline(tmpLineData, sizeof(tmpLineData)))
+	{
+		if (line == lineNum)
+		{
+			strFileData += CharToStr(lineData);
+			strFileData += "\n";
+		}
+		else
+		{
+			strFileData += CharToStr(tmpLineData);
+			strFileData += "\n";
+		}
+		line++;
+	}
+	in.close();
+ 
+	//写入文件
+	ofstream out;
+	out.open(fileName);
+	out.flush();
+	out<<strFileData;
+	out.close();
+}
+
+void System :: Student_Deposit(){
 	string Filename = "Student_Account_Message.txt";
-	while(true){
+	bool sign = true;
+	while(sign == true){
 		system("cls");
 		fflush(stdin);
 		string s_name; 
@@ -1334,108 +1370,110 @@ void System :: Student_Deposit(void){
 		cin>>s_name; 
 		string s_id;
 		cout<<"请输入您的学号："<<endl;
-		cin>>s_id;		
+		cin>>s_id;
 		
 		ifstream fin(Filename, std::ios::in);
 		char line[1024]={0};
 		string f_name = "", f_sex = "", f_id = "", f_college = "", f_password = "", f_times = "", f_money = "";
 		bool In_Message=false;
-		int number = 0;
-		
+		int number = 0;	
 		while(fin.getline(line, sizeof(line))){
 			number++;
 			stringstream word(line);
 			word >> f_name >> f_sex >> f_id >> f_college >> f_password >> f_times >> f_money;
-			double check_money = atof(f_money.c_str());
-			while(s_name == f_name && s_id == f_id){
-				cout<<"请输入您需要充值的金额："<<endl;
-				string string_money;
-				cin>>string_money;
-				double double_money = atof(string_money.c_str());
+//			cout << f_name << f_sex << f_id << f_college << f_password << f_times << f_money;
+			if(f_name == s_name && f_id == s_id){
 				Student student(f_name, f_sex, f_id, f_college, f_password, f_times, f_money);
-				string final_money = student.Student_Deposit(double_money);
-				system("cls");
-				fflush(stdin);
-				cout<<"请输入您的密码:"<<endl;
-				string tmp_password = get_password();
-				if(f_password == tmp_password){
-					DelLineData(Filename, number);
-					ofstream outfile;
-					outfile.open(Filename, ios::app); 
-					outfile << f_name << " " << f_sex << " " << f_id << " " << f_college << " " << f_password <<" " << f_times << " "  << final_money <<endl; 
-					outfile.close(); 
-					In_Message = true;
-					student.~Student();
-					break;
+				sign = false;
+				while(true){
+					system("cls");
+					fflush(stdin);
+					cout<<"请输入您的密码"<<endl;
+					string input_password = get_password();
+					if(input_password == f_password){
+						double dep; 
+						cout<<"\n请输入您的充值金额："<<endl;
+						cin>>dep;
+						string m = student.Student_Deposit(dep);
+						string new_inputline = f_name +" "+ f_sex +" "+ f_id +" "+ f_college +" "+ f_password +" "+ f_times +" "+ m; 
+						char* chr1 = const_cast<char*>(Filename.c_str());
+						char* chr2 = const_cast<char*>(new_inputline.c_str());
+						ModifyLineData(chr1, number, chr2);
+						cout<<"\07充值成功"<<endl; 
+						Sleep(300);
+						break;
+					} else{
+						
+						cout<<"\n密码错误，按任意键返回"<<endl;
+						getch();
+					}
 				}
 			}
-			if(In_Message == true){
-				break;
-			}
 		}
-		fin.clear();
-		fin.close();
-		if(In_Message == true){
-			break;
-		}
+	} 
+	if(sign == true){
+		cout<<"您不在当前账户中，按任意键返回"<<endl;
+		getch();
 	}
+	
 }
 
-void System :: Teacher_Fam_Deposit(void){
+void System :: Teacher_Fam_Deposit(){
 	string Filename = "Teacher_Fam_Account_Message.txt";
-	while(true){
+	bool sign = true;
+	while(sign == true){
 		system("cls");
 		fflush(stdin);
 		string s_name; 
 		cout<<"请输入您的名字:"<<endl;
 		cin>>s_name; 
 		string s_id;
-		cout<<"请输入您的家属号："<<endl;
+		cout<<"请输入您的学号："<<endl;
 		cin>>s_id;
 		
 		ifstream fin(Filename, std::ios::in);
 		char line[1024]={0};
 		string f_name = "", f_sex = "", f_id = "", f_money = "", f_times = "", f_password = "";
 		bool In_Message=false;
-		int number = 0;
-		
+		int number = 0;	
 		while(fin.getline(line, sizeof(line))){
 			number++;
 			stringstream word(line);
 			word >> f_name >> f_sex >> f_id >> f_money >> f_times >> f_password;
-			double check_money = atof(f_money.c_str());
-			while(s_name == f_name && s_id == f_id){
-				cout<<"请输入您需要充值的金额："<<endl;
-				string string_money;
-				cin>>string_money;
-				double double_money = atof(string_money.c_str());
+			if(f_name == s_name && f_id == s_id){
 				Teacher_Fam teacher_fam(f_name, f_sex, f_id, f_money, f_times, f_password);
-				string final_money = teacher_fam.Teacher_Fam_Deposit(double_money);
-				system("cls");
-				fflush(stdin);
-				cout<<"请输入您的密码:"<<endl;
-				string tmp_password = get_password();
-				if(f_password == tmp_password){
-					DelLineData(Filename, number);
-					ofstream outfile;
-					outfile.open(Filename, ios::app); 
-					outfile << f_name << " " << f_sex << " " << f_id << " " << final_money << " " << f_times <<" " << f_password <<endl; 
-					outfile.close(); 
-					In_Message = true;
-					teacher_fam.~Teacher_Fam();
-					break;
+				sign = false;
+				while(true){
+					system("cls");
+					fflush(stdin);
+					cout<<"请输入您的密码"<<endl;
+					string input_password = get_password();
+					if(input_password == f_password){
+						double dep; 
+						cout<<"\n请输入您的充值金额："<<endl;
+						cin>>dep;
+						string m = teacher_fam.Teacher_Fam_Deposit(dep);
+						string new_inputline = f_name +" "+ f_sex +" "+ f_id +" "+ m +" "+ f_times +" "+ f_password; 
+						char* chr1 = const_cast<char*>(Filename.c_str());
+						char* chr2 = const_cast<char*>(new_inputline.c_str());
+						ModifyLineData(chr1, number, chr2);
+						cout<<"\07充值成功"<<endl; 
+						Sleep(300);
+						break;
+					} else{
+						
+						cout<<"\n密码错误，按任意键返回"<<endl;
+						getch();
+					}
 				}
 			}
-			if(In_Message == true){
-				break;
-			}
 		}
-		fin.clear();
-		fin.close();
-		if(In_Message == true){
-			break;
-		}
-	}	
+	} 
+	if(sign == true){
+		cout<<"您不在当前账户中，按任意键返回"<<endl;
+		getch();
+	}
+	
 }
 
 int main(){
