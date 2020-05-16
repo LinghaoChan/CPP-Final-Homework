@@ -758,7 +758,7 @@ void System :: Create_Teacher_Fam(){
 	}	
 }
 
-string System :: get_password(){
+string System :: get_password(void){
 	int count = 0;
 	char str[25];
 	char c;
@@ -1448,8 +1448,7 @@ void System :: Deposit(){
 	}	
 }
 
-void System :: ModifyLineData(char* fileName, int lineNum, char* lineData)
-{
+void System :: ModifyLineData(char* fileName, int lineNum, char* lineData){
 	ifstream in;
 	in.open(fileName);
  
