@@ -1098,7 +1098,7 @@ void System :: People_Get_On_Bus(Bus& bus1, Bus& bus2, int ch){ //老师信息验证
 	time (&timep);
 	p=gmtime(&timep);
 	int sec_time = p->tm_sec + (p->tm_min) * 60 + (8+p->tm_hour) * 60 * 60;
-	if(sec_time<28800 || sec_time>=100000){										//64800 
+	if(sec_time<28800 || sec_time>=64800){										//64800 
 		cout<<"当日车辆已停运"<<endl;
 		cout<<"早上8点为第一班车，晚上18点为最后一班车"<<endl;
 		cout<<"按任意键重返回\n";
@@ -1530,11 +1530,11 @@ void System :: Student_Deposit(){
 				}
 			}
 		}
+		if(sign == true){
+			cout<<"您不在当前账户中，按任意键返回"<<endl;
+			getch();
+		}
 	} 
-	if(sign == true){
-		cout<<"您不在当前账户中，按任意键返回"<<endl;
-		getch();
-	}
 	
 }
 
@@ -1573,7 +1573,7 @@ void System :: Teacher_Fam_Deposit(){
 						cout<<"\n请输入您的充值金额："<<endl;
 						cin>>dep;
 						string m = teacher_fam.Teacher_Fam_Deposit(dep);
-						string new_inputline = f_name +" "+ f_sex +" "+ f_id +" "+ m +" "+ f_times +" "+ f_password; 
+						string new_inputline = f_name +" "+ f_sex +" "+ f_id +" "+ m +" "+  f_password; 
 						char* chr1 = const_cast<char*>(Filename.c_str());
 						char* chr2 = const_cast<char*>(new_inputline.c_str());
 						ModifyLineData(chr1, number, chr2);
@@ -1588,11 +1588,12 @@ void System :: Teacher_Fam_Deposit(){
 				}
 			}
 		}
+		if(sign == true){
+			cout<<"您不在当前账户中，按任意键返回"<<endl;
+			getch();
+		}
 	} 
-	if(sign == true){
-		cout<<"您不在当前账户中，按任意键返回"<<endl;
-		getch();
-	}	
+		
 }
 
 void System :: Check_Month(){
