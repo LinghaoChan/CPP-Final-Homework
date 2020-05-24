@@ -19,12 +19,6 @@ public:
 	People(string, string, string) ;
 };
 
-People :: People (string i_name, string i_sex, string i_id){
-	this->name = i_name;
-	this->sex = i_sex;
-	this->id = i_id;
-}
-
 class Student : public People {
 private:
 	string college;	
@@ -40,6 +34,96 @@ public:
 	void Show_Status(void);
 	static void Student_Clear_Times(void);
 }; 
+
+class Teacher : public People {
+private:
+	string college;	
+	int times;
+	string password;
+public:
+	Teacher(string i_name,string i_id, string i_sex, string i_college, string i_password, string i_times);
+	~Teacher(); 
+	string Teacher_Times_Plus();
+	void Show_Status(void);
+	static void Teacher_Claer_Times(void);
+};
+
+class Teacher_Fam : public People {
+private:
+	int times;
+	double money;
+	string password;
+public:
+	Teacher_Fam(string, string, string, string, string, string);
+	~Teacher_Fam(void);	
+	string Teacher_Fam_Times_Plus(void);
+	string Teacher_Fam_Money_Decrease(void); 
+	int Get_Times(void);
+	string Teacher_Fam_Deposit(double);
+	void Show_Status(void);
+	static void Teacher_Fam_Claer_Times(void);
+};
+
+class Bus{
+private:
+	int number_of_passengers;
+	int size;
+	int count;
+	double place;
+	string id;
+	string brand;
+	string driver; 
+public:
+	Bus(int un_permit);
+	string Get_Bus_Id(void);
+	int Get_count(void);
+	int Get_number_of_passengers(void);
+	double Get_place(void);
+	void Show_Status(void);
+	void Get_On_One_Person(void);
+	bool Get_Status(void);
+};
+
+class System{
+	static int MONTH; 
+	bool (System :: *Function_Get_On_Bus_pointer[3])(Bus&, Bus&) = {&System :: Teacher_Get_On_Bus_Check, &System :: Student_Get_On_Bus_Check, &System :: Teacher_Fam_Get_On_Bus_Check};
+	void (System :: *People_Deposit_pointer[2])(void) = {&System :: Student_Deposit, &System :: Teacher_Fam_Deposit};
+public:
+	void System_open(void);
+	void System_choice(void);
+	void System_Initialize_User_Message(void);
+	void Create_Account_menu(void); 
+	void Create_Teacher(void); 
+	void Create_Student(void); 
+	void Create_Teacher_Fam(void); 
+	void Check_MONTH(void);
+	void Delete_Account_menu(void);
+	void Delete_Teacher(void);
+	void Delete_Student(void);
+	void Delete_Teacher_Fam(void);
+	void DelLineData(string fileName, int lineNum);
+	void Get_On_Bus_And_Deposit_menu(Bus&, Bus&);
+	void Get_On_Bus(Bus&, Bus&);	
+	void People_Get_On_Bus(Bus&, Bus&, int);
+	void Deposit(void);
+	bool Teacher_Get_On_Bus_Check(Bus&, Bus&);
+	bool Student_Get_On_Bus_Check(Bus&, Bus&);
+	bool Teacher_Fam_Get_On_Bus_Check(Bus&, Bus&);
+	void Student_Deposit(void);
+	void Teacher_Fam_Deposit(void);
+	void ModifyLineData(char* fileName, int lineNum, char* lineData);
+	string CharToStr(char* contentChar);
+	string get_password(void);
+	static void Check_Month(void);
+
+};
+
+People :: People (string i_name, string i_sex, string i_id){
+	this->name = i_name;
+	this->sex = i_sex;
+	this->id = i_id;
+}
+
 
 Student :: Student(string i_name, string i_sex, string i_id, string i_college, string i_password, string i_times, string i_money):People(i_name, i_sex, i_id){
 	this->college = i_college;
@@ -97,19 +181,6 @@ void Student :: Student_Clear_Times(){
 	out.close();
 }
 
-class Teacher : public People {
-private:
-	string college;	
-	int times;
-	string password;
-public:
-	Teacher(string i_name,string i_id, string i_sex, string i_college, string i_password, string i_times);
-	~Teacher(); 
-	string Teacher_Times_Plus();
-	void Show_Status(void);
-	static void Teacher_Claer_Times(void);
-};
-
 void Teacher :: Teacher_Claer_Times(){
 	string Filename = "Teacher_Account_Message.txt";		
 	ifstream fin(Filename, std::ios::in);
@@ -131,6 +202,7 @@ void Teacher :: Teacher_Claer_Times(){
 	out << 	Filedata;
 	out.close();
 }
+
 Teacher :: Teacher(string i_name,string i_id, string i_sex, string i_college, string i_password, string i_times):People(i_name, i_id, i_sex){
 	this->college = i_college;
 	this->password = i_password;
@@ -153,22 +225,6 @@ void Teacher :: Show_Status(void){
 	cout<<"| *                                                                                             * |\n";
 	cout<<"|  * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - * - *  |\n\n\n";
 }
-
-class Teacher_Fam : public People {
-private:
-	int times;
-	double money;
-	string password;
-public:
-	Teacher_Fam(string, string, string, string, string, string);
-	~Teacher_Fam(void);	
-	string Teacher_Fam_Times_Plus(void);
-	string Teacher_Fam_Money_Decrease(void); 
-	int Get_Times(void);
-	string Teacher_Fam_Deposit(double);
-	void Show_Status(void);
-	static void Teacher_Fam_Claer_Times(void);
-};
 
 Teacher_Fam :: Teacher_Fam(string i_name, string i_sex, string i_id, string i_money, string i_times, string i_password):People(i_name, i_sex, i_id){
 	this->money = atof(i_money.c_str());
@@ -229,26 +285,6 @@ void Teacher_Fam :: Teacher_Fam_Claer_Times(){
 	
 }
 
-
-class Bus{
-private:
-	int number_of_passengers;
-	int size;
-	int count;
-	double place;
-	string id;
-	string brand;
-	string driver; 
-public:
-	Bus(int un_permit);
-	string Get_Bus_Id(void);
-	int Get_count(void);
-	int Get_number_of_passengers(void);
-	double Get_place(void);
-	void Show_Status(void);
-	void Get_On_One_Person(void);
-	bool Get_Status(void);
-};
 
 Bus :: Bus(int un_permit){
 	string Filename = "Bus_Message.txt";
@@ -337,40 +373,6 @@ double Bus :: Get_place(){
 void Bus :: Get_On_One_Person(){
 	this->number_of_passengers++;
 }
-
-class System{
-	static int MONTH; 
-	bool (System :: *Function_Get_On_Bus_pointer[3])(Bus&, Bus&) = {&System :: Teacher_Get_On_Bus_Check, &System :: Student_Get_On_Bus_Check, &System :: Teacher_Fam_Get_On_Bus_Check};
-	void (System :: *People_Deposit_pointer[2])(void) = {&System :: Student_Deposit, &System :: Teacher_Fam_Deposit};
-public:
-	void System_open(void);
-	void System_choice(void);
-	void System_Initialize_User_Message(void);
-	void Create_Account_menu(void); 
-	void Create_Teacher(void); 
-	void Create_Student(void); 
-	void Create_Teacher_Fam(void); 
-	void Check_MONTH(void);
-	void Delete_Account_menu(void);
-	void Delete_Teacher(void);
-	void Delete_Student(void);
-	void Delete_Teacher_Fam(void);
-	void DelLineData(string fileName, int lineNum);
-	void Get_On_Bus_And_Deposit_menu(Bus&, Bus&);
-	void Get_On_Bus(Bus&, Bus&);	
-	void People_Get_On_Bus(Bus&, Bus&, int);
-	void Deposit(void);
-	bool Teacher_Get_On_Bus_Check(Bus&, Bus&);
-	bool Student_Get_On_Bus_Check(Bus&, Bus&);
-	bool Teacher_Fam_Get_On_Bus_Check(Bus&, Bus&);
-	void Student_Deposit(void);
-	void Teacher_Fam_Deposit(void);
-	void ModifyLineData(char* fileName, int lineNum, char* lineData);
-	string CharToStr(char* contentChar);
-	string get_password(void);
-	static void Check_Month(void);
-
-};
 
 int System :: MONTH = 5;
 
